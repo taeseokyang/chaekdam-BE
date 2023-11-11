@@ -1,5 +1,5 @@
-# SUBSUB-BE
-zero100 2기, Todolist
+# BaroBorrow-BE
 
 ## DB설계
-<img width="635" alt="Screenshot 2023-11-05 at 12 05 07 AM" src="https://github.com/Leets-Official/SUBSUB-BE/assets/136783693/5b1af89e-f902-4f1a-a739-9b2ee41cb745">
+
+<img width="592" alt="Screenshot 2023-11-11 at 5 59 30 PM" src="https://github.com/Eggis0/BaroBorrow-BE/assets/136783693/2e44035d-05ff-4c93-8232-4f9135a5b706">
