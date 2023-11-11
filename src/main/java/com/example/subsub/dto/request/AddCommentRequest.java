@@ -1,18 +1,17 @@
 package com.example.subsub.dto.request;
 
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE, force = true)
-@AllArgsConstructor
-public class UpdatePropertyRequest {
+public class AddCommentRequest {
+    private final Integer postId;
+    private final String text;
+    private final LocalDate createdAt;
+    private final Boolean isSecret;
 
-    private final LocalDate expiredAt;
-    private final String content;
 }

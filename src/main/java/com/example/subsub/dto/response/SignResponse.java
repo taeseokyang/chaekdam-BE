@@ -1,6 +1,8 @@
 package com.example.subsub.dto.response;
 
 import com.example.subsub.domain.Authority;
+import com.example.subsub.domain.Comment;
+import com.example.subsub.domain.Post;
 import com.example.subsub.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,14 +17,11 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SignResponse {
+
     private Long id;
-
     private String userId;
-
     private String nickname;
-
     private List<Authority> roles = new ArrayList<>();
-
     private String token;
     private String message;
 

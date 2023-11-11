@@ -83,7 +83,6 @@ public class SignService {
         }
         return new RegisterResponse(true, "회원가입 성공");
     }
-
     @Transactional
     public SignResponse getUser(String id) throws Exception {
         if (userRepository.countUserByUserId(id)==1){
