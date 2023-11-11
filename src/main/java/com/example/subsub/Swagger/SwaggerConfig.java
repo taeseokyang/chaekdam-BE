@@ -13,8 +13,8 @@ import org.springframework.context.annotation.Configuration;
 
 
 @OpenAPIDefinition(
-        info = @Info(title = "SUBSUB API 명세서!!!! ( >.< )",
-                description = "Leets-Zero100 : SUBSUB - ToDoList 서비스 API 명세서",
+        info = @Info(title = "BaroBorrow API 명세서",
+                description = "교내 대여 중개 서비스 API 명세서",
                 version = "v1"))
 @RequiredArgsConstructor
 @Configuration

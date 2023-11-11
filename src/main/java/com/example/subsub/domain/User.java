@@ -25,12 +25,15 @@ public class User {
     @Column(nullable = false)
     private String passWord;
 
+    @OneToMany(mappedBy = "user",fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    private List<Comment> comments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user",fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    private List<Post> posts = new ArrayList<>();
+
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @Builder.Default
     private List<Authority> roles = new ArrayList<>();
-
-    @OneToMany(mappedBy = "user")
-    private List<Subject> subjects;
 
     public void setRoles(List<Authority> role) {
         this.roles = role;
