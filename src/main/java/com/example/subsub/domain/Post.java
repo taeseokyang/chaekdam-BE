@@ -47,8 +47,8 @@ public class Post {
     @Column(nullable = false)
     private Boolean isClose;
 
-    @OneToMany(mappedBy = "post", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private List<Comment> comments = new ArrayList<>();;
+    @OneToMany(mappedBy = "post", fetch = FetchType.EAGER, orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id")

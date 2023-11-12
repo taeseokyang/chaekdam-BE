@@ -25,11 +25,15 @@ public class CommentApiController {
         return new CommentResponse(comment);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteComment(@PathVariable Integer id) {
-        commentService.delete(id);
-        return ResponseEntity.ok().build();
+
+    @DeleteMapping("/{id}") //삭제 하고 반환값 없음
+    public ResponseEntity<String> deleteComment(@PathVariable Integer id) {
+        ResponseEntity<String> result = commentService.delete(id);
+        return result;
     }
+
+
+    // DTO로 변환
     @GetMapping("/all")
     public ResponseEntity<List<Comment>>  getAllComment() {
         List<Comment> comments = commentService.getAllComment();

@@ -8,11 +8,14 @@ import com.example.subsub.dto.request.UpdateCommentRequest;
 import com.example.subsub.repository.CommentRepository;
 import com.example.subsub.repository.PostRepository;
 import com.example.subsub.repository.UserRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -37,10 +40,17 @@ public class CommentService {
         return commentRepository.save(property);
     }
 
-    public void delete(Integer propertyId) {
-        commentRepository.deleteById(propertyId);
+    @Transactional
+    public ResponseEntity<String> delete(Integer commentId) {
+        Optional<Comment> comment = commentRepository.findById(commentId);
+        if (comment.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Comment not found with ID: " + commentId);
+        }
+        commentRepository.deleteByCommentId(commentId);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Comment is deleted with ID:" + commentId);
     }
 
+    // 유저에 따른, 포스트에 따른 으로 바꿔야함.
     public List<Comment> getAllComment() {
         return commentRepository.findAll();
     }

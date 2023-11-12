@@ -11,6 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/post")
@@ -61,8 +62,8 @@ public class PostApiController {
 //    })
 
     @DeleteMapping("/{id}")
-    public boolean deletePost(@PathVariable Integer id) {
-        postService.deletePost(id);
-        return true;
+    public ResponseEntity<String> deletePost(@PathVariable Integer id) {
+        ResponseEntity<String> result = postService.deletePost(id);
+        return result;
     }
 }

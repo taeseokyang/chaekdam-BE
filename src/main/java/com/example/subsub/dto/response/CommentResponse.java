@@ -12,16 +12,17 @@ import java.util.List;
 @Getter
 public class CommentResponse {
 
-
-    private User userId;
-    private Post postId;
+    private Long commentId;
+    private String userId;
+    private Integer postId;
     private String text;
     private LocalDate createdAt;
     private Boolean isSecret;
 
     public CommentResponse(Comment comment){
-        userId = comment.getUser();
-        postId = comment.getPost();
+        commentId = comment.getCommentId();
+        userId = comment.getUser().getUserId();
+        postId = comment.getPost().getPostId();
         text = comment.getText();
         createdAt = comment.getCreatedAt();
         isSecret = comment.isSecret();

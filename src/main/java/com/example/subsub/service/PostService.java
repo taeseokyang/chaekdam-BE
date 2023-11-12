@@ -6,7 +6,10 @@ import com.example.subsub.dto.request.AddPostRequest;
 import com.example.subsub.repository.PostRepository;
 import com.example.subsub.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -42,14 +45,21 @@ public class PostService {
     }
 
     // 모두 조회
-    public List<Post> getAllPost(String userid) {
-        User user = userRepository.findByUserId(userid).get();
+    // 댓글 개수만 반환하게 해야함.
+    public List<Post> getAllPost(String userId) {
+        User user = userRepository.findByUserId(userId).get();
         return postRepository.findAllByUser(user);
     }
 
     //삭제
-    public void deletePost(Integer id){
-        postRepository.deleteById(id);
+    @Transactional
+    public ResponseEntity<String> deletePost(Integer postId){
+        Optional<Post> post = postRepository.findById(postId);
+        if (post.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Post not found with ID: " + postId);
+        }
+        postRepository.deleteByPostId(postId);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Post is deleted with ID:" + postId);
     }
 
 }
