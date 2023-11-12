@@ -25,14 +25,14 @@ public class User {
     @Column(nullable = false)
     private String passWord;
 
-    @OneToMany(mappedBy = "user",fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user",fetch = FetchType.EAGER)
     private List<Comment> comments = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user",fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user",fetch = FetchType.EAGER)
     private List<Post> posts = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @Builder.Default
+//    @Builder.Default
     private List<Authority> roles = new ArrayList<>();
 
     public void setRoles(List<Authority> role) {
