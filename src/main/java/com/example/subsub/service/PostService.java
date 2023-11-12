@@ -1,8 +1,11 @@
 package com.example.subsub.service;
 
+import com.example.subsub.domain.Comment;
 import com.example.subsub.domain.Post;
 import com.example.subsub.domain.User;
 import com.example.subsub.dto.request.AddPostRequest;
+import com.example.subsub.dto.request.UpdateCommentRequest;
+import com.example.subsub.dto.request.UpdatePostRequest;
 import com.example.subsub.repository.PostRepository;
 import com.example.subsub.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -68,4 +71,16 @@ public class PostService {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Post is deleted with ID:" + postId);
     }
 
+    @Transactional
+    public ResponseEntity<Post> update(Integer id, UpdatePostRequest request) {
+        Post post = postRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+        post.setTitle(request.getTitle());
+        post.setLocation(request.getLocation());
+        post.setLocationDetail(request.getLocationDetail());
+        post.setNeedAt(request.getNeedAt());
+        post.setReturnAt(request.getReturnAt());
+        post.setRentalFee(request.getRentalFee());
+        Post updatedPost = postRepository.save(post);
+        return ResponseEntity.ok(updatedPost);
+    }
 }

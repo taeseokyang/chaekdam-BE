@@ -2,6 +2,7 @@ package com.example.subsub.controller;
 
 import com.example.subsub.domain.Comment;
 import com.example.subsub.dto.request.AddCommentRequest;
+import com.example.subsub.dto.request.UpdateCommentRequest;
 import com.example.subsub.dto.response.CommentResponse;
 import com.example.subsub.service.CommentService;
 import lombok.RequiredArgsConstructor;
@@ -41,9 +42,9 @@ public class CommentApiController {
         return new ResponseEntity<>(comments, HttpStatus.OK);
     }
 
-//    @PatchMapping("/{id}")
-//    public CommentResponse update(@PathVariable Integer id, @RequestBody UpdateCommentRequest request) {
-//        Comment comment = commentService.update(id, request);
-//        return new CommentResponse(comment);
-//    }
+    @PutMapping("/{id}")
+    public ResponseEntity<Comment>  updateComment(@PathVariable Integer id, @RequestBody UpdateCommentRequest request) {
+        ResponseEntity<Comment> comment = commentService.update(id, request);
+        return comment;
+    }
 }

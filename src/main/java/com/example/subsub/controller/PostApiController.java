@@ -1,7 +1,10 @@
 package com.example.subsub.controller;
 
+import com.example.subsub.domain.Comment;
 import com.example.subsub.domain.Post;
 import com.example.subsub.dto.request.AddPostRequest;
+import com.example.subsub.dto.request.UpdateCommentRequest;
+import com.example.subsub.dto.request.UpdatePostRequest;
 import com.example.subsub.dto.response.PostResponse;
 import com.example.subsub.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -19,16 +22,6 @@ import java.util.Optional;
 public class PostApiController {
 
     private final PostService postService;
-
-//    @Operation(summary = "게시물 정보입력하기", description = "게시물과 관련된 정보를 입력하면 올라갑니다. ", tags = {"SubjectAPIController"})
-//    @ApiResponses({
-//            @ApiResponse(responseCode = "200", description = "입력성공",
-//                    content = @Content(schema = @Schema(implementation = PostApiController.class))),
-//            @ApiResponse(responseCode = "400", description = "확인되지 않은 접근입니다."),
-//            @ApiResponse(responseCode = "404", description = "찾을 수 없습니다."),
-//            @ApiResponse(responseCode = "500", description = "서버 오류 발생했습니다.")
-//    })
-
 
     // 생성
     @PostMapping
@@ -59,18 +52,15 @@ public class PostApiController {
         return ResponseEntity.ok(posts);
     }
 
-//    @Operation(summary = "게시물 정보 삭제", description = "입력된 게시물 정보가 삭제됩니다.", tags = {"Post Controller"})
-//    @ApiResponses({
-//            @ApiResponse(responseCode = "200", description = "입력성공",
-//                    content = @Content(schema = @Schema(implementation = PostApiController.class))),
-//            @ApiResponse(responseCode = "400", description = "확인되지 않은 접근입니다."),
-//            @ApiResponse(responseCode = "404", description = "찾을 수 없습니다."),
-//            @ApiResponse(responseCode = "500", description = "서버 오류 발생했습니다.")
-//    })
-
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deletePost(@PathVariable Integer id) {
         ResponseEntity<String> result = postService.deletePost(id);
         return result;
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Post>  updatePost(@PathVariable Integer id, @RequestBody UpdatePostRequest request) {
+        ResponseEntity<Post> post = postService.update(id, request);
+        return post;
     }
 }
