@@ -1,7 +1,10 @@
 package com.example.subsub.service;
 
 import com.example.subsub.domain.Authority;
+import com.example.subsub.domain.Comment;
 import com.example.subsub.domain.User;
+import com.example.subsub.dto.request.UpdateCommentRequest;
+import com.example.subsub.dto.request.UpdateUserRequest;
 import com.example.subsub.dto.response.RegisterResponse;
 import com.example.subsub.dto.request.SignRequest;
 import com.example.subsub.dto.response.SignResponse;
@@ -107,6 +110,14 @@ public class SignService {
             return new ResponseEntity<>(signResponse, HttpStatus.NOT_FOUND);
         }
 
+    }
+
+    @Transactional
+    public ResponseEntity<SignResponse> update(String userId, UpdateUserRequest request) {
+        User user = userRepository.findByUserId(userId).orElseThrow(IllegalArgumentException::new);
+        user.setNickName(request.getNickname());
+        User updatedUser = userRepository.save(user);
+        return ResponseEntity.ok(new SignResponse(updatedUser, "변경 성공"));
     }
 
 }

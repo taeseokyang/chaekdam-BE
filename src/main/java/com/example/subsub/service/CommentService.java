@@ -55,10 +55,11 @@ public class CommentService {
         return commentRepository.findAll();
     }
 
-//    @Transactional
-//    public Comment update(Integer id, UpdateCommentRequest request) {
-//        Comment comment = commentRepository.findById(id).orElseThrow(IllegalArgumentException::new);
-//        comment.update(request);
-//        return savedProperty;
-//    }
+    @Transactional
+    public ResponseEntity<Comment> update(Integer id, UpdateCommentRequest request) {
+        Comment comment = commentRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+        comment.setText(request.getText());
+        Comment updatedComment = commentRepository.save(comment);
+        return ResponseEntity.ok(updatedComment);
+    }
 }
