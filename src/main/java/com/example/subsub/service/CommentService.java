@@ -55,6 +55,11 @@ public class CommentService {
         return commentRepository.findAll();
     }
 
+    public List<Comment> getAllCommentByUserId(String userName) {
+        User user = userRepository.findByUserId(userName).get();
+        return commentRepository.findAllByUser(user);
+    }
+
     @Transactional
     public ResponseEntity<Comment> update(Integer id, UpdateCommentRequest request) {
         Comment comment = commentRepository.findById(id).orElseThrow(IllegalArgumentException::new);

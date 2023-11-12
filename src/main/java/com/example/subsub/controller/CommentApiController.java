@@ -42,6 +42,12 @@ public class CommentApiController {
         return new ResponseEntity<>(comments, HttpStatus.OK);
     }
 
+    @GetMapping("/user/all")
+    public ResponseEntity<List<Comment>>  getAllCommentByUserId(Authentication authentication) {
+        List<Comment> comments = commentService.getAllCommentByUserId(authentication.getName());
+        return new ResponseEntity<>(comments, HttpStatus.OK);
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<Comment>  updateComment(@PathVariable Integer id, @RequestBody UpdateCommentRequest request) {
         ResponseEntity<Comment> comment = commentService.update(id, request);
