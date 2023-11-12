@@ -60,6 +60,10 @@ public class PostService {
         return postRepository.findAllByLocation(location);
     }
 
+    public List<Post> getTop10Post() {
+        return postRepository.findTop10ByOrderByCreatedAtDesc();
+    }
+
     //삭제
     @Transactional
     public ResponseEntity<String> deletePost(Integer postId){
