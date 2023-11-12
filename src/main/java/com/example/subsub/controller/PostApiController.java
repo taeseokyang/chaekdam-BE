@@ -45,10 +45,17 @@ public class PostApiController {
         return ResponseEntity.ok().body(new PostResponse(subject));
     }
 
-    // 모두 조회
+    // 모두 조회 by userid
     @GetMapping("/all")
-    public ResponseEntity<List<Post>> getAllPost(Authentication authentication) throws Exception {
-        List<Post> posts = postService.getAllPost(authentication.getName());
+    public ResponseEntity<List<Post>> getAllPostByUserId(Authentication authentication) throws Exception {
+        List<Post> posts = postService.getAllPostByUserId(authentication.getName());
+        return ResponseEntity.ok(posts);
+    }
+
+    // 모두 조회 by location
+    @GetMapping("/all/{location}")
+    public ResponseEntity<List<Post>> getAllPostByLocation(@PathVariable String location) throws Exception {
+        List<Post> posts = postService.getAllPostByLocation(location);
         return ResponseEntity.ok(posts);
     }
 

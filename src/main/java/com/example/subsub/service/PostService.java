@@ -46,9 +46,15 @@ public class PostService {
 
     // 모두 조회
     // 댓글 개수만 반환하게 해야함.
-    public List<Post> getAllPost(String userId) {
+    public List<Post> getAllPostByUserId(String userId) {
         User user = userRepository.findByUserId(userId).get();
         return postRepository.findAllByUser(user);
+    }
+
+    // 모두 조회
+    // 댓글 개수만 반환하게 해야함.
+    public List<Post> getAllPostByLocation(String location) {
+        return postRepository.findAllByLocation(location);
     }
 
     //삭제
