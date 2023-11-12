@@ -16,6 +16,7 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
     List<Post> findAllByLocation(String location);
     Optional<Post> findByPostId(Integer postId);
     void deleteByPostId(Integer postId);
+    List<Post> findTop10ByOrderByCreatedAtDesc();
 
 
 

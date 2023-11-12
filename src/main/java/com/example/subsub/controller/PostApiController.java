@@ -52,6 +52,12 @@ public class PostApiController {
         return ResponseEntity.ok(posts);
     }
 
+    @GetMapping("/top5")
+    public ResponseEntity<List<Post>> getTop10Post() throws Exception {
+        List<Post> posts = postService.getTop10Post();
+        return ResponseEntity.ok(posts);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deletePost(@PathVariable Integer id) {
         ResponseEntity<String> result = postService.deletePost(id);

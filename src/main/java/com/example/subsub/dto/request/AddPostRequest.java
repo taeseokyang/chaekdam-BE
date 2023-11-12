@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -16,7 +17,7 @@ public class AddPostRequest {
     private String location;
     private String locationDetail;
     private long rentalFee;
-    private LocalDate createdAt;
+    private LocalDateTime createdAt;
     private LocalDate needAt;
     private LocalDate returnAt;
     private String content;

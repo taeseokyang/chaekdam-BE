@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +23,7 @@ public class PostResponse {
     private String location;
     private String locationDetail;
     private Long rentalFee;
-    private LocalDate createdAt;
+    private LocalDateTime createdAt;
     private LocalDate needAt;
     private LocalDate returnAt;
     private String content;
