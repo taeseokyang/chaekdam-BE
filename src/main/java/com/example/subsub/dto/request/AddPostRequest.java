@@ -21,5 +21,4 @@ public class AddPostRequest {
     private LocalDate needAt;
     private LocalDate returnAt;
     private String content;
-    private Boolean isClose;
 }
