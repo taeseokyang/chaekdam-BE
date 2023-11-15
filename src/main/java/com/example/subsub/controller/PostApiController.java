@@ -6,6 +6,7 @@ import com.example.subsub.dto.request.AddPostRequest;
 import com.example.subsub.dto.request.UpdateCommentRequest;
 import com.example.subsub.dto.request.UpdatePostRequest;
 import com.example.subsub.dto.response.PostResponse;
+import com.example.subsub.dto.response.PostsResponse;
 import com.example.subsub.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -40,21 +41,21 @@ public class PostApiController {
 
     // 모두 조회 by userid
     @GetMapping("/all")
-    public ResponseEntity<List<Post>> getAllPostByUserId(Authentication authentication) throws Exception {
-        List<Post> posts = postService.getAllPostByUserId(authentication.getName());
+    public ResponseEntity<List<PostsResponse>> getAllPostByUserId(Authentication authentication) throws Exception {
+        List<PostsResponse> posts = postService.getAllPostByUserId(authentication.getName());
         return ResponseEntity.ok(posts);
     }
 
     // 모두 조회 by location
     @GetMapping("/all/{location}")
-    public ResponseEntity<List<Post>> getAllPostByLocation(@PathVariable String location) throws Exception {
-        List<Post> posts = postService.getAllPostByLocation(location);
+    public ResponseEntity<List<PostsResponse>> getAllPostByLocation(@PathVariable String location) throws Exception {
+        List<PostsResponse> posts = postService.getAllPostByLocation(location);
         return ResponseEntity.ok(posts);
     }
 
-    @GetMapping("/top5")
-    public ResponseEntity<List<Post>> getTop10Post() throws Exception {
-        List<Post> posts = postService.getTop10Post();
+    @GetMapping("/news")
+    public ResponseEntity<List<PostsResponse>> getTop10Post() throws Exception {
+        List<PostsResponse> posts = postService.getTop10Post();
         return ResponseEntity.ok(posts);
     }
 
@@ -65,8 +66,14 @@ public class PostApiController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Post>  updatePost(@PathVariable Integer id, @RequestBody UpdatePostRequest request) {
-        ResponseEntity<Post> post = postService.update(id, request);
+    public ResponseEntity<PostResponse>  updatePost(@PathVariable Integer id, @RequestBody UpdatePostRequest request) {
+        ResponseEntity<PostResponse> post = postService.update(id, request);
+        return post;
+    }
+
+    @PutMapping("/done/{id}")
+    public ResponseEntity<PostResponse>  done(@PathVariable Integer id) {
+        ResponseEntity<PostResponse> post = postService.done(id);
         return post;
     }
 }
