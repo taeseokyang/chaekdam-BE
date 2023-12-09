@@ -6,27 +6,26 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class SignResponse {
+public class UserResponse {
 
     private Long id;
     private String userId;
     private String nickname;
     private Role roles;
     private String token;
+    private boolean isCertification;
     private String message;
 
-    public SignResponse(User user, String message) {
+    public UserResponse(User user, String message) {
         this.id = user.getId();
         this.userId = user.getUserId();
         this.nickname = user.getNickName();
         this.roles = user.getRoles();
+        this.isCertification = user.isCertification();
         this.message = message;
 
     }

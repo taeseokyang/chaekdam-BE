@@ -35,7 +35,14 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role roles;
 
+    @Column(nullable = false)
+    private boolean isCertification = false;
+
     public void setRoles(Role roles) {
         this.roles = roles;
+    }
+
+    public void setCertification(Boolean isCertification) {
+        this.isCertification = isCertification;
     }
 }
