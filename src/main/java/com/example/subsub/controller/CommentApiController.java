@@ -34,7 +34,7 @@ public class CommentApiController {
     }
 
 
-    // DTO로 변환
+        // DTO로 변환
     @GetMapping("/all")
     public ResponseEntity<List<Comment>>  getAllComment() {
         List<Comment> comments = commentService.getAllComment();
