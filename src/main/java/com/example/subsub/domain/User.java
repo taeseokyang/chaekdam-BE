@@ -17,7 +17,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String userId;
 
     @Column(nullable = false)
@@ -32,12 +32,17 @@ public class User {
     @OneToMany(mappedBy = "user",fetch = FetchType.EAGER)
     private List<Post> posts = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-//    @Builder.Default
-    private List<Authority> roles = new ArrayList<>();
+    @Enumerated(EnumType.STRING)
+    private Role roles;
 
-    public void setRoles(List<Authority> role) {
-        this.roles = role;
-        role.forEach(o -> o.setUser(this));
+    @Column(nullable = false)
+    private boolean isCertification = false;
+
+    public void setRoles(Role roles) {
+        this.roles = roles;
+    }
+
+    public void setCertification(Boolean isCertification) {
+        this.isCertification = isCertification;
     }
 }
