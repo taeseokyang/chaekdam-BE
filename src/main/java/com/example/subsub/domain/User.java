@@ -26,8 +26,8 @@ public class User {
     @Column(nullable = false)
     private String passWord;
 
-    @OneToMany(mappedBy = "user",fetch = FetchType.EAGER)
-    private List<Comment> comments = new ArrayList<>();
+//    @OneToMany(mappedBy = "user",fetch = FetchType.EAGER)
+//    private List<Comment> comments = new ArrayList<>();
 
     @OneToMany(mappedBy = "user",fetch = FetchType.EAGER)
     private List<Post> posts = new ArrayList<>();
