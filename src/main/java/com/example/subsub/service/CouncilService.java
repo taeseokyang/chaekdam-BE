@@ -1,18 +1,10 @@
 package com.example.subsub.service;
 
 import com.example.subsub.domain.Council;
-import com.example.subsub.domain.Post;
-import com.example.subsub.domain.User;
 import com.example.subsub.dto.request.AddCouncilRequest;
-import com.example.subsub.dto.request.AddPostRequest;
 import com.example.subsub.dto.request.UpdateCouncilRequest;
-import com.example.subsub.dto.request.UpdatePostRequest;
 import com.example.subsub.dto.response.CouncilResponse;
-import com.example.subsub.dto.response.PostResponse;
-import com.example.subsub.dto.response.PostsResponse;
 import com.example.subsub.repository.CouncilRepository;
-import com.example.subsub.repository.PostRepository;
-import com.example.subsub.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -57,6 +48,7 @@ public class CouncilService {
             dto.setLocation(council.getLocation());
             dto.setOperatingHours(council.getOperatingHours());
             dto.setUsageGuidelines(council.getUsageGuidelines());
+            dto.setItems(council.getItems());
             councilsDTO.add(dto);
         }
         return councilsDTO;
@@ -66,9 +58,9 @@ public class CouncilService {
     public ResponseEntity<String> deleteCouncil(Integer councilId){
         if (councilRepository.existsById(councilId)) {
             councilRepository.deleteByCouncilId(councilId);
-            return ResponseEntity.status(HttpStatus.OK).body("Post is deleted with ID:" + councilId);
+            return ResponseEntity.status(HttpStatus.OK).body("Council is deleted with ID:" + councilId);
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Post not found with ID: " + councilId);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Council not found with ID: " + councilId);
     }
 
     public ResponseEntity<CouncilResponse> update(Integer id, UpdateCouncilRequest request) {

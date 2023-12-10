@@ -7,5 +7,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 @Transactional
-public interface CouncilItemRepository extends JpaRepository<CouncilItem, Long> {
+public interface CouncilItemRepository extends JpaRepository<CouncilItem, Integer> {
+    void deleteByItemId(Integer councilItemId);
 }

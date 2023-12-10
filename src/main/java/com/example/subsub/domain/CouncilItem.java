@@ -12,7 +12,7 @@ import lombok.*;
 public class CouncilItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long itemId;
+    private Integer itemId;
 
     @Column(nullable = false)
     private String name;
