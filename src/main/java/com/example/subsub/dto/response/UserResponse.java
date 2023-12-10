@@ -27,6 +27,5 @@ public class UserResponse {
         this.roles = user.getRoles();
         this.isCertification = user.isCertification();
         this.message = message;
-
     }
 }

@@ -6,7 +6,6 @@ import com.example.subsub.dto.request.AddPostRequest;
 import com.example.subsub.dto.request.UpdatePostRequest;
 import com.example.subsub.dto.response.PostResponse;
 import com.example.subsub.dto.response.PostsResponse;
-import com.example.subsub.repository.CommentRepository;
 import com.example.subsub.repository.PostRepository;
 import com.example.subsub.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,11 +20,12 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class PostService {
 
     private final PostRepository postRepository;
     private final UserRepository userRepository;
-    private final CommentRepository commentRepository;
+//    private final CommentRepository commentRepository;
 
     // 생성
     public Post save(AddPostRequest request, String userName) {
@@ -67,7 +67,7 @@ public class PostService {
             dto.setRentalFee(post.getRentalFee());
             dto.setCreatedAt(post.getCreatedAt());
             dto.setClose(post.getIsClose());
-            dto.setCommentCount(commentRepository.countByPost(post));
+//            dto.setCommentCount(commentRepository.countByPost(post));
 
             postsDTO.add(dto);
         }
@@ -88,7 +88,8 @@ public class PostService {
             dto.setRentalFee(post.getRentalFee());
             dto.setCreatedAt(post.getCreatedAt());
             dto.setClose(post.getIsClose());
-            dto.setCommentCount(commentRepository.countByPost(post));
+            //챗 카운트로 바꿔야
+//            dto.setCommentCount(commentRepository.countByPost(post));
 
             postsDTO.add(dto);
         }
@@ -108,7 +109,7 @@ public class PostService {
             dto.setRentalFee(post.getRentalFee());
             dto.setCreatedAt(post.getCreatedAt());
             dto.setClose(post.getIsClose());
-            dto.setCommentCount(commentRepository.countByPost(post));
+//            dto.setCommentCount(commentRepository.countByPost(post));
 
             postsDTO.add(dto);
         }
@@ -116,17 +117,14 @@ public class PostService {
     }
 
     //삭제
-    @Transactional
     public ResponseEntity<String> deletePost(Integer postId){
-        Optional<Post> post = postRepository.findById(postId);
-        if (post.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Post not found with ID: " + postId);
+        if (postRepository.existsById(postId)) {
+            postRepository.deleteByPostId(postId);
+            return ResponseEntity.status(HttpStatus.OK).body("Post is deleted with ID:" + postId);
         }
-        postRepository.deleteByPostId(postId);
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Post is deleted with ID:" + postId);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Post not found with ID: " + postId);
     }
 
-    @Transactional
     public ResponseEntity<PostResponse> update(Integer id, UpdatePostRequest request) {
         Post post = postRepository.findById(id).orElseThrow(IllegalArgumentException::new);
         post.setTitle(request.getTitle());

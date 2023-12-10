@@ -1,21 +1,17 @@
 package com.example.subsub.controller;
 
-import com.example.subsub.domain.Comment;
 import com.example.subsub.domain.Post;
 import com.example.subsub.dto.request.AddPostRequest;
-import com.example.subsub.dto.request.UpdateCommentRequest;
 import com.example.subsub.dto.request.UpdatePostRequest;
 import com.example.subsub.dto.response.PostResponse;
 import com.example.subsub.dto.response.PostsResponse;
 import com.example.subsub.service.PostService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/post")
@@ -35,8 +31,8 @@ public class PostApiController {
     // 조회
     @GetMapping("/{id}")
     public ResponseEntity<PostResponse> findById(@PathVariable Integer id) {
-        Post subject = postService.getPost(id);
-        return ResponseEntity.ok().body(new PostResponse(subject));
+        Post post = postService.getPost(id);
+        return ResponseEntity.ok().body(new PostResponse(post));
     }
 
     // 모두 조회 by userid
