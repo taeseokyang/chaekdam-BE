@@ -1,6 +1,7 @@
 package com.example.subsub.dto.response;
 
-import com.example.subsub.domain.*;
+import com.example.subsub.domain.Role;
+import com.example.subsub.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

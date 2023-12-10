@@ -1,6 +1,5 @@
 package com.example.subsub.dto.response;
 
-import com.example.subsub.domain.Council;
 import com.example.subsub.domain.CouncilItem;
 import com.example.subsub.domain.ItemType;
 import lombok.*;

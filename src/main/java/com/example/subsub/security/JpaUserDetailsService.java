@@ -1,7 +1,7 @@
 package com.example.subsub.security;
 
-import com.example.subsub.domain.User;
 import com.example.subsub.repository.UserRepository;
+import com.example.subsub.domain.User;
 import lombok.*;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
