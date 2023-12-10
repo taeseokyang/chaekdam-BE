@@ -1,19 +1,12 @@
 package com.example.subsub.controller;
 
 import com.example.subsub.domain.Council;
-import com.example.subsub.domain.Post;
 import com.example.subsub.dto.request.AddCouncilRequest;
-import com.example.subsub.dto.request.AddPostRequest;
 import com.example.subsub.dto.request.UpdateCouncilRequest;
-import com.example.subsub.dto.request.UpdatePostRequest;
 import com.example.subsub.dto.response.CouncilResponse;
-import com.example.subsub.dto.response.PostResponse;
-import com.example.subsub.dto.response.PostsResponse;
 import com.example.subsub.service.CouncilService;
-import com.example.subsub.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

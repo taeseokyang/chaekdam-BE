@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 
 @AllArgsConstructor
-@NoArgsConstructor//이거 왜 해야함?
+@NoArgsConstructor
 @Getter
 public class PostResponse {
 
