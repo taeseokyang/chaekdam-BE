@@ -1,7 +1,9 @@
 package com.example.subsub.controller;
 
 
-import com.example.subsub.dto.chat.ChatRoom;
+import com.example.subsub.domain.ChatRoom;
+import com.example.subsub.dto.chat.AddChatRoomRequest;
+import com.example.subsub.dto.chat.ChatRoomResponse;
 import com.example.subsub.service.ChatService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,15 +17,15 @@ import java.util.List;
 @RequestMapping("/chat")
 public class ChatController {
 
-    private final ChatService service;
+    private final ChatService chatService;
 
     @PostMapping
-    public ChatRoom createRoom(@RequestParam String name){
-        return service.createRoom(name);
+    public ChatRoomResponse createRoom(@RequestBody AddChatRoomRequest request){
+        return chatService.createRoom(request);
     }
 
     @GetMapping
     public List<ChatRoom> findAllRooms(){
-        return service.findAllRoom();
+        return chatService.findAllRoom();
     }
 }

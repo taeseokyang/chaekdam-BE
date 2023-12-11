@@ -1,6 +1,13 @@
 package com.example.subsub.service;
 
-import com.example.subsub.dto.chat.ChatRoom;
+import com.example.subsub.domain.ChatRoom;
+import com.example.subsub.domain.Post;
+import com.example.subsub.domain.User;
+import com.example.subsub.dto.chat.AddChatRoomRequest;
+import com.example.subsub.dto.chat.ChatRoomResponse;
+import com.example.subsub.repository.ChatRoomRepository;
+import com.example.subsub.repository.PostRepository;
+import com.example.subsub.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -8,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
-import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.*;
 
@@ -16,33 +22,29 @@ import java.util.*;
 @Data
 @Service
 public class ChatService {
+
+    private final PostRepository postRepository;
+    private final UserRepository userRepository;
+    private final ChatRoomRepository chatRoomRepository;
     private final ObjectMapper mapper;
-    private Map<String, ChatRoom> chatRooms;
-
-    @PostConstruct
-    private void init() {
-        chatRooms = new LinkedHashMap<>();
-    }
-
     public List<ChatRoom> findAllRoom(){
-        return new ArrayList<>(chatRooms.values());
+        List<ChatRoom> chatRooms = chatRoomRepository.findAll();
+        return chatRooms;
     }
 
-    public ChatRoom findRoomById(String roomId){
-        return chatRooms.get(roomId);
-    }
-
-    public ChatRoom createRoom(String name) {
-        String roomId = UUID.randomUUID().toString(); // 랜덤한 방 아이디 생성
-
-        // Builder 를 이용해서 ChatRoom 을 Building
-        ChatRoom room = ChatRoom.builder()
+    public ChatRoomResponse createRoom(AddChatRoomRequest request) {
+        String roomId = UUID.randomUUID().toString();
+        User borrower = userRepository.findById(request.getBorrowerId()).get();
+        User lender = userRepository.findById(request.getRenderId()).get();
+        Post post = postRepository.findById(request.getPostId()).get();
+        ChatRoom chatRoom = ChatRoom.builder()
                 .roomId(roomId)
-                .name(name)
+                .borrower(borrower)
+                .lender(lender)
+                .post(post)
                 .build();
 
-        chatRooms.put(roomId, room); // 랜덤 아이디와 room 정보를 Map 에 저장
-        return room;
+        return new ChatRoomResponse(chatRoomRepository.save(chatRoom));
     }
 
     public <T> void sendMessage(WebSocketSession session, T message) {
