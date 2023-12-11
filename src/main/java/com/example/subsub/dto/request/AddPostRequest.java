@@ -13,7 +13,7 @@ public class AddPostRequest {
     private String location;
     private String locationDetail;
     private long rentalFee;
-    private LocalDateTime createdAt;
+//    private LocalDateTime createdAt;
     private LocalDate needAt;
     private LocalDate returnAt;
     private String content;

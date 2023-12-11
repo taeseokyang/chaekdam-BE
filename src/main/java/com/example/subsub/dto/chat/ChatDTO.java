@@ -1,5 +1,7 @@
 package com.example.subsub.dto.chat;
 
+import com.example.subsub.domain.MessageType;
+import com.example.subsub.domain.UserType;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -7,13 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ChatDTO {
     // 메시지  타입 : 입장, 채팅
-    public enum MessageType{
-        ENTER, TALK
-    }
-
-    public enum UserType{
-        BORROWER, LENDER
-    }
     private UserType userType;
     private MessageType type; // 메시지 타입
     private String roomId; // 방 번호

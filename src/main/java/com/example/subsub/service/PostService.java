@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,13 +30,14 @@ public class PostService {
     // 생성
     public Post save(AddPostRequest request, String userName) {
         User user = userRepository.findByUserId(userName).get();
+        LocalDateTime createdAt = LocalDateTime.now();
         Post post = Post.builder()
                 .title(request.getTitle())
                 .content(request.getContent())
                 .location(request.getLocation())
                 .locationDetail(request.getLocationDetail())
                 .rentalFee(request.getRentalFee())
-                .createdAt(request.getCreatedAt())
+                .createdAt(createdAt)
                 .needAt(request.getNeedAt())
                 .returnAt(request.getReturnAt())
                 .isClose(false)

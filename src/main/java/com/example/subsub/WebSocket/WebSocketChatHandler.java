@@ -1,10 +1,10 @@
 package com.example.subsub.WebSocket;
 
-import com.example.subsub.domain.ChatRoom;
-import com.example.subsub.domain.User;
+import com.example.subsub.domain.*;
 import com.example.subsub.dto.chat.ChatDTO;
 import com.example.subsub.repository.ChatRoomRepository;
 import com.example.subsub.service.ChatService;
+import com.example.subsub.service.MessageService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +27,7 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
     private final ObjectMapper mapper;
 
     private final ChatService chatService;
+    private final MessageService messageService;
     private final ChatRoomRepository chatRoomRepository;
 
     private Map<WebSocketSession, Long> sessionToIdMap = new HashMap<>();
@@ -55,21 +56,22 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
     public void handleAction(WebSocketSession session, ChatDTO message, String roodId,ChatService chatService) {
         ChatRoom chatRoom = chatRoomRepository.findByRoomId(roodId);
 
-        if (message.getType().equals(ChatDTO.MessageType.ENTER)) {
+        if (message.getType().equals(MessageType.ENTER)) {
             session_Idx += 1;
 
             sessionToIdMap.put(session,session_Idx);
             idToSessionMap.put(session_Idx,session);
 
-            if (message.getUserType().equals(ChatDTO.UserType.BORROWER))
+            if (message.getUserType().equals(UserType.BORROWER))
                 chatRoom.setBorrowerSessionId(session_Idx);
-            else if(message.getUserType().equals(ChatDTO.UserType.LENDER))
+            else if(message.getUserType().equals(UserType.LENDER))
                 chatRoom.setLenderSessionId(session_Idx);
 
             chatRoomRepository.save(chatRoom);
             message.setMessage(message.getSender() + " 님이 입장하셨습니다");
             sendMessage(message, chatRoom,chatService);
-        } else if (message.getType().equals(ChatDTO.MessageType.TALK)) {
+        } else if (message.getType().equals(MessageType.TALK)) {
+            messageService.save(message.getMessage(),roodId,message.getSender(),message.getUserType());
             message.setMessage(message.getMessage());
             sendMessage(message, chatRoom, chatService);
         }

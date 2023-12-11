@@ -15,4 +15,6 @@ import java.util.Optional;
 @Transactional
 public interface ChatRoomRepository extends JpaRepository<ChatRoom, Integer> {
     ChatRoom findByRoomId(String roomId);
+    List<ChatRoom> findAllByBorrower(User borrower);
+    List<ChatRoom> findAllByLender(User lender);
 }
