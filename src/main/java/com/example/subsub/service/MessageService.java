@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,8 +39,12 @@ public class MessageService {
         return messageRepository.save(saveMessage);
     }
 
-    public List<Message> getAllMessageByRoomId(String roomId) {
+    public List<Message> getAllMessageByRoomId(String roomId, String userName) {
         ChatRoom chatRoom = chatRoomRepository.findByRoomId(roomId);
-        return messageRepository.findAllByChatRoom(chatRoom);
+
+        if (chatRoom.getBorrower().getUserId().equals(userName) || chatRoom.getLender().getUserId().equals(userName)){
+            return messageRepository.findAllByChatRoomOrderBySentAtDesc(chatRoom);
+        }
+        return Collections.emptyList();
     }
 }

@@ -13,8 +13,7 @@ import java.util.List;
 @Repository
 @Transactional
 public interface MessageRepository extends JpaRepository<Message, Long> {
-//    List<Post> findAllByLocationOrderByIsCloseAscCreatedAtDesc(String location);
-    List<Message> findAllByChatRoom(ChatRoom chatRoom);
+    List<Message> findAllByChatRoomOrderBySentAtDesc(ChatRoom chatRoom);
 
     Message findFirstByChatRoomOrderBySentAtDesc(ChatRoom chatRoom);
 }

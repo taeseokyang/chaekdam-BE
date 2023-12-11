@@ -14,9 +14,7 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -25,7 +23,6 @@ import java.util.Map;
 public class WebSocketChatHandler extends TextWebSocketHandler {
 
     private final ObjectMapper mapper;
-
     private final ChatService chatService;
     private final MessageService messageService;
     private final ChatRoomRepository chatRoomRepository;

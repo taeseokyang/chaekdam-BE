@@ -65,7 +65,6 @@ public class ChatService {
                 .lender(lender)
                 .post(post)
                 .build();
-
         return new ChatRoomResponse(chatRoomRepository.save(chatRoom));
     }
 
