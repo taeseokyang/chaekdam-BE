@@ -1,22 +1,22 @@
 package com.example.subsub.service;
 
-import com.example.subsub.domain.Post;
 import com.example.subsub.domain.User;
+import com.example.subsub.repository.PostRepository;
+import com.example.subsub.repository.UserRepository;
+import com.example.subsub.domain.Post;
 import com.example.subsub.dto.request.AddPostRequest;
 import com.example.subsub.dto.request.UpdatePostRequest;
 import com.example.subsub.dto.response.PostResponse;
 import com.example.subsub.dto.response.PostsResponse;
-import com.example.subsub.repository.PostRepository;
-import com.example.subsub.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -30,13 +30,14 @@ public class PostService {
     // 생성
     public Post save(AddPostRequest request, String userName) {
         User user = userRepository.findByUserId(userName).get();
+        LocalDateTime createdAt = LocalDateTime.now();
         Post post = Post.builder()
                 .title(request.getTitle())
                 .content(request.getContent())
                 .location(request.getLocation())
                 .locationDetail(request.getLocationDetail())
                 .rentalFee(request.getRentalFee())
-                .createdAt(request.getCreatedAt())
+                .createdAt(createdAt)
                 .needAt(request.getNeedAt())
                 .returnAt(request.getReturnAt())
                 .isClose(false)

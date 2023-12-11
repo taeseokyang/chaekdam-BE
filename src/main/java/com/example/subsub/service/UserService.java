@@ -1,5 +1,7 @@
 package com.example.subsub.service;
 
+import com.example.subsub.repository.UserRepository;
+import com.example.subsub.security.JwtProvider;
 import com.example.subsub.domain.Role;
 import com.example.subsub.domain.User;
 import com.example.subsub.dto.request.UpdateUserCertifiRequest;
@@ -7,8 +9,6 @@ import com.example.subsub.dto.request.UpdateUserRequest;
 import com.example.subsub.dto.response.RegisterResponse;
 import com.example.subsub.dto.request.UserRequest;
 import com.example.subsub.dto.response.UserResponse;
-import com.example.subsub.repository.UserRepository;
-import com.example.subsub.security.JwtProvider;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.HttpStatus;

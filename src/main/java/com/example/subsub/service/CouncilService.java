@@ -1,10 +1,10 @@
 package com.example.subsub.service;
 
 import com.example.subsub.domain.Council;
-import com.example.subsub.dto.request.AddCouncilRequest;
-import com.example.subsub.dto.request.UpdateCouncilRequest;
 import com.example.subsub.dto.response.CouncilResponse;
 import com.example.subsub.repository.CouncilRepository;
+import com.example.subsub.dto.request.AddCouncilRequest;
+import com.example.subsub.dto.request.UpdateCouncilRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

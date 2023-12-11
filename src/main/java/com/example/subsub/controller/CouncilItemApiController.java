@@ -2,9 +2,9 @@ package com.example.subsub.controller;
 
 import com.example.subsub.domain.CouncilItem;
 import com.example.subsub.dto.request.AddCouncilItemRequest;
+import com.example.subsub.service.CouncilItemService;
 import com.example.subsub.dto.request.UpdateCouncilItemRequest;
 import com.example.subsub.dto.response.CouncilItemResponse;
-import com.example.subsub.service.CouncilItemService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
