@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 public class ChatRoomsResponse {
     private Integer id;
     private String roomId;
-    private String postTitle;
+    private Integer postId;
     private UserType userType;
     private String borrowerNickname;
     private String lenderNickname;
@@ -24,7 +24,7 @@ public class ChatRoomsResponse {
     public ChatRoomsResponse(ChatRoom chatRoom,UserType userType, String lastMessage, LocalDateTime lastMessageTime){
         id = chatRoom.getId();
         roomId = chatRoom.getRoomId();
-        postTitle = chatRoom.getPost().getTitle();
+        postId = chatRoom.getPost().getPostId();
         this.userType = userType;
         borrowerNickname = chatRoom.getBorrower().getNickName();
         lenderNickname = chatRoom.getLender().getNickName();

@@ -43,7 +43,7 @@ public class MessageService {
         ChatRoom chatRoom = chatRoomRepository.findByRoomId(roomId);
 
         if (chatRoom.getBorrower().getUserId().equals(userName) || chatRoom.getLender().getUserId().equals(userName)){
-            return messageRepository.findAllByChatRoomOrderBySentAtDesc(chatRoom);
+            return messageRepository.findAllByChatRoomOrderBySentAtAsc(chatRoom);
         }
         return Collections.emptyList();
     }
