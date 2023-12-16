@@ -16,6 +16,7 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Slf4j
@@ -40,15 +41,30 @@ public class ChatService {
 
         List<ChatRoomsResponse> chatRoomsDTO = new ArrayList<>();
 
-
+        String lastMessage;
+        LocalDateTime lastMeesageTime;
         for(ChatRoom chatRoom : chatRoomsForBorrowing){
-            Message lastMessage = messageRepository.findFirstByChatRoomOrderBySentAtDesc(chatRoom);
-            ChatRoomsResponse dto = new ChatRoomsResponse(chatRoom, UserType.BORROWER, lastMessage.getMessage(), lastMessage.getSentAt());
+            Optional<Message> optionalLastMessage = messageRepository.findFirstByChatRoomOrderBySentAtDesc(chatRoom);
+            if (optionalLastMessage.isPresent()) {
+                lastMessage = optionalLastMessage.get().getMessage();
+                lastMeesageTime = optionalLastMessage.get().getSentAt();
+            } else {
+                lastMessage = "no message";
+                lastMeesageTime = LocalDateTime.now();
+            }
+            ChatRoomsResponse dto = new ChatRoomsResponse(chatRoom, UserType.BORROWER, lastMessage, lastMeesageTime);
             chatRoomsDTO.add(dto);
         }
         for(ChatRoom chatRoom : chatRoomsForLending){
-            Message lastMessage = messageRepository.findFirstByChatRoomOrderBySentAtDesc(chatRoom);
-            ChatRoomsResponse dto = new ChatRoomsResponse(chatRoom, UserType.LENDER, lastMessage.getMessage(), lastMessage.getSentAt());
+            Optional<Message> optionalLastMessage = messageRepository.findFirstByChatRoomOrderBySentAtDesc(chatRoom);
+            if (optionalLastMessage.isPresent()) {
+                lastMessage = optionalLastMessage.get().getMessage();
+                lastMeesageTime = optionalLastMessage.get().getSentAt();
+            } else {
+                lastMessage = "no message";
+                lastMeesageTime = LocalDateTime.now();
+            }
+            ChatRoomsResponse dto = new ChatRoomsResponse(chatRoom, UserType.LENDER, lastMessage, lastMeesageTime);
             chatRoomsDTO.add(dto);
         }
         return chatRoomsDTO;

@@ -37,17 +37,18 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
         log.info("payload {}", payload);
 
         ChatDTO chatMessage = mapper.readValue(payload, ChatDTO.class);
-        log.info("session {}", chatMessage.toString());
-
+//        log.info("session {}", chatMessage.toString());
+        log.info("{} 연결됨", session.getId());
         handleAction(session, chatMessage, chatMessage.getRoomId(),chatService);
     }
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
         // TODO Auto-generated method stub
-        log.info("{} 연결 끊김", session.getId());
         Long removedSessionIdx = sessionToIdMap.remove(session);
         idToSessionMap.remove(removedSessionIdx);
+        log.info("{} 연결 끊김", session.getId());
+        log.info("세션 메모리 크기 {}", sessionToIdMap.size());
     }
 
     public void handleAction(WebSocketSession session, ChatDTO message, String roodId,ChatService chatService) {
@@ -65,8 +66,8 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
                 chatRoom.setLenderSessionId(session_Idx);
 
             chatRoomRepository.save(chatRoom);
-            message.setMessage(message.getSender() + " 님이 입장하셨습니다");
-            sendMessage(message, chatRoom,chatService);
+//            message.setMessage(message.getSender() + " 님이 입장하셨습니다");
+//            sendMessage(message, chatRoom,chatService);
         } else if (message.getType().equals(MessageType.TALK)) {
             messageService.save(message.getMessage(),roodId,message.getSender(),message.getUserType());
             message.setMessage(message.getMessage());

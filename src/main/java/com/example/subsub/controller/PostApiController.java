@@ -7,6 +7,7 @@ import com.example.subsub.dto.response.PostResponse;
 import com.example.subsub.dto.response.PostsResponse;
 import com.example.subsub.service.PostService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -22,10 +23,10 @@ public class PostApiController {
 
     // 생성
     @PostMapping
-    public PostResponse save(@RequestBody AddPostRequest request, Authentication authentication) {
-        System.out.println(authentication.getName());
+    public ResponseEntity<PostResponse> save(@RequestBody AddPostRequest request, Authentication authentication) {
+        if (authentication == null) return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         Post post = postService.save(request, authentication.getName());
-        return new PostResponse(post);
+        return ResponseEntity.ok().body(new PostResponse(post));
     }
 
     // 조회
@@ -38,6 +39,7 @@ public class PostApiController {
     // 모두 조회 by userid
     @GetMapping("/all")
     public ResponseEntity<List<PostsResponse>> getAllPostByUserId(Authentication authentication) throws Exception {
+        if (authentication == null) return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         List<PostsResponse> posts = postService.getAllPostByUserId(authentication.getName());
         return ResponseEntity.ok(posts);
     }
