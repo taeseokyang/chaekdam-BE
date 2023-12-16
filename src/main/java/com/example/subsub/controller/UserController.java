@@ -7,6 +7,7 @@ import com.example.subsub.dto.request.UserRequest;
 import com.example.subsub.dto.response.UserResponse;
 import com.example.subsub.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -42,6 +43,7 @@ public class UserController {
     }
     @PutMapping("/user/update")
     public ResponseEntity<UserResponse>  updateNickname(@RequestBody UpdateUserRequest request, Authentication authentication) {
+        if (authentication == null) return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         return userService.updateNickname(authentication.getName(), request);
     }
 

@@ -8,6 +8,7 @@ import com.example.subsub.service.ChatService;
 import com.example.subsub.service.MessageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -30,6 +31,7 @@ public class ChatController {
 
     @GetMapping("/message/{roomId}")
     public ResponseEntity<List<Message>> getAllMessageByRoom(@PathVariable String roomId, Authentication authentication) throws Exception {
+        if (authentication == null) return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         List<Message> messages = messageService.getAllMessageByRoomId(roomId, authentication.getName());
         return ResponseEntity.ok(messages);
     }
@@ -39,7 +41,8 @@ public class ChatController {
 //    }
 
     @GetMapping("/user")
-    public List<ChatRoomsResponse> findAllByUser(Authentication authentication){
-        return chatService.findAllByUser(authentication.getName());
+    public ResponseEntity<List<ChatRoomsResponse>> findAllByUser(Authentication authentication){
+        if (authentication == null) return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        return ResponseEntity.ok(chatService.findAllByUser(authentication.getName()));
     }
 }
