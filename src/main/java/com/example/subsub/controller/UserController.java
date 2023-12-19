@@ -27,12 +27,12 @@ public class UserController {
         return userService.register(request);
     }
 
-    @GetMapping("/user/get")
+    @GetMapping("/account")
     public ResponseEntity<UserResponse> getUser(@RequestParam String id) throws Exception {
         return userService.getUser(id);
     }
 
-    @GetMapping("/admin/get")
+    @GetMapping("/admin")
     public ResponseEntity<UserResponse> getUserForAdmin(@RequestParam String id) throws Exception {
         return userService.getUser(id);
     }

@@ -40,10 +40,10 @@ public class MessageService {
     }
 
     public List<Message> getAllMessageByRoomId(String roomId, String userName) {
-        ChatRoom chatRoom = chatRoomRepository.findByRoomId(roomId);
-
-        if (chatRoom.getBorrower().getUserId().equals(userName) || chatRoom.getLender().getUserId().equals(userName)){
-            return messageRepository.findAllByChatRoomOrderBySentAtAsc(chatRoom);
+        if (chatRoomRepository.existsByRoomId(roomId)){
+            ChatRoom chatRoom = chatRoomRepository.findByRoomId(roomId);
+            if (chatRoom.getBorrower().getUserId().equals(userName) || chatRoom.getLender().getUserId().equals(userName))
+                return messageRepository.findAllByChatRoomOrderBySentAtAsc(chatRoom);
         }
         return Collections.emptyList();
     }
