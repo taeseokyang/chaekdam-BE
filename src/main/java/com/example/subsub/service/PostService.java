@@ -47,8 +47,10 @@ public class PostService {
     }
 
     // 조회
-    public Post getPost(Integer id) {
-        return postRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+    public ResponseEntity<PostResponse> getPost(Integer id) {
+        if (postRepository.existsByPostId(id))
+            return ResponseEntity.ok().body(new PostResponse(postRepository.findById(id).orElseThrow(IllegalArgumentException::new)));
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     // 모두 조회

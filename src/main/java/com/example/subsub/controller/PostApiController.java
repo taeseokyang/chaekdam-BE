@@ -5,6 +5,7 @@ import com.example.subsub.dto.request.AddPostRequest;
 import com.example.subsub.dto.request.UpdatePostRequest;
 import com.example.subsub.dto.response.PostResponse;
 import com.example.subsub.dto.response.PostsResponse;
+import com.example.subsub.repository.PostRepository;
 import com.example.subsub.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -32,8 +33,8 @@ public class PostApiController {
     // 조회
     @GetMapping("/{id}")
     public ResponseEntity<PostResponse> findById(@PathVariable Integer id) {
-        Post post = postService.getPost(id);
-        return ResponseEntity.ok().body(new PostResponse(post));
+//        Post post = postService.getPost(id);
+        return postService.getPost(id);
     }
 
     // 모두 조회 by userid

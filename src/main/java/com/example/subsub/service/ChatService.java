@@ -35,39 +35,42 @@ public class ChatService {
     }
 
     public List<ChatRoomsResponse> findAllByUser(String userName){
-        User user = userRepository.findByUserId(userName).get();
-        List<ChatRoom> chatRoomsForBorrowing = chatRoomRepository.findAllByBorrower(user);
-        List<ChatRoom> chatRoomsForLending = chatRoomRepository.findAllByLender(user);
+        if (userRepository.existsUserByUserId(userName)){
+            User user = userRepository.findByUserId(userName).get();
+            List<ChatRoom> chatRoomsForBorrowing = chatRoomRepository.findAllByBorrower(user);
+            List<ChatRoom> chatRoomsForLending = chatRoomRepository.findAllByLender(user);
 
-        List<ChatRoomsResponse> chatRoomsDTO = new ArrayList<>();
+            List<ChatRoomsResponse> chatRoomsDTO = new ArrayList<>();
 
-        String lastMessage;
-        LocalDateTime lastMeesageTime;
-        for(ChatRoom chatRoom : chatRoomsForBorrowing){
-            Optional<Message> optionalLastMessage = messageRepository.findFirstByChatRoomOrderBySentAtDesc(chatRoom);
-            if (optionalLastMessage.isPresent()) {
-                lastMessage = optionalLastMessage.get().getMessage();
-                lastMeesageTime = optionalLastMessage.get().getSentAt();
-            } else {
-                lastMessage = "no message";
-                lastMeesageTime = LocalDateTime.now();
+            String lastMessage;
+            LocalDateTime lastMeesageTime;
+            for(ChatRoom chatRoom : chatRoomsForBorrowing){
+                Optional<Message> optionalLastMessage = messageRepository.findFirstByChatRoomOrderBySentAtDesc(chatRoom);
+                if (optionalLastMessage.isPresent()) {
+                    lastMessage = optionalLastMessage.get().getMessage();
+                    lastMeesageTime = optionalLastMessage.get().getSentAt();
+                } else {
+                    lastMessage = "no message";
+                    lastMeesageTime = LocalDateTime.now();
+                }
+                ChatRoomsResponse dto = new ChatRoomsResponse(chatRoom, UserType.BORROWER, lastMessage, lastMeesageTime);
+                chatRoomsDTO.add(dto);
             }
-            ChatRoomsResponse dto = new ChatRoomsResponse(chatRoom, UserType.BORROWER, lastMessage, lastMeesageTime);
-            chatRoomsDTO.add(dto);
-        }
-        for(ChatRoom chatRoom : chatRoomsForLending){
-            Optional<Message> optionalLastMessage = messageRepository.findFirstByChatRoomOrderBySentAtDesc(chatRoom);
-            if (optionalLastMessage.isPresent()) {
-                lastMessage = optionalLastMessage.get().getMessage();
-                lastMeesageTime = optionalLastMessage.get().getSentAt();
-            } else {
-                lastMessage = "no message";
-                lastMeesageTime = LocalDateTime.now();
+            for(ChatRoom chatRoom : chatRoomsForLending){
+                Optional<Message> optionalLastMessage = messageRepository.findFirstByChatRoomOrderBySentAtDesc(chatRoom);
+                if (optionalLastMessage.isPresent()) {
+                    lastMessage = optionalLastMessage.get().getMessage();
+                    lastMeesageTime = optionalLastMessage.get().getSentAt();
+                } else {
+                    lastMessage = "no message";
+                    lastMeesageTime = LocalDateTime.now();
+                }
+                ChatRoomsResponse dto = new ChatRoomsResponse(chatRoom, UserType.LENDER, lastMessage, lastMeesageTime);
+                chatRoomsDTO.add(dto);
             }
-            ChatRoomsResponse dto = new ChatRoomsResponse(chatRoom, UserType.LENDER, lastMessage, lastMeesageTime);
-            chatRoomsDTO.add(dto);
+            return chatRoomsDTO;
         }
-        return chatRoomsDTO;
+        return new ArrayList<>();
     }
 
     public ChatRoomResponse createRoom(AddChatRoomRequest request) {

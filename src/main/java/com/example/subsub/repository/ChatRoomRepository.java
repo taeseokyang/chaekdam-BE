@@ -14,6 +14,7 @@ import java.util.Optional;
 @Repository
 @Transactional
 public interface ChatRoomRepository extends JpaRepository<ChatRoom, Integer> {
+    Boolean existsByRoomId(String roomId);
     ChatRoom findByRoomId(String roomId);
     List<ChatRoom> findAllByBorrower(User borrower);
     List<ChatRoom> findAllByLender(User lender);

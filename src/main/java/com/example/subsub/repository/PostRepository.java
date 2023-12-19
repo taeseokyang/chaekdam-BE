@@ -14,6 +14,7 @@ import java.util.Optional;
 public interface PostRepository extends JpaRepository<Post, Integer> {
     List<Post> findAllByUser(User user);
 //    List<Post> findAllByLocationOrderByCreatedAt(String location);
+    Boolean existsByPostId(Integer postId);
     List<Post> findAllByLocationOrderByIsCloseAscCreatedAtDesc(String location);
     Optional<Post> findByPostId(Integer postId);
     void deleteByPostId(Integer postId);
