@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor
 public class AddCouncilRequest {
+    private String college;
     private String name;
     private String location;
     private String operatingHours;

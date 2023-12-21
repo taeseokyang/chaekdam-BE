@@ -4,6 +4,7 @@ import com.example.subsub.domain.Council;
 import com.example.subsub.dto.request.AddCouncilRequest;
 import com.example.subsub.dto.request.UpdateCouncilRequest;
 import com.example.subsub.dto.response.CouncilResponse;
+import com.example.subsub.dto.response.CouncilsResponse;
 import com.example.subsub.service.CouncilService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -32,10 +33,10 @@ public class CouncilApiController {
         return ResponseEntity.ok().body(new CouncilResponse(council));
     }
 
-    // 모두 조회 by userid
+
     @GetMapping("/all")
-    public ResponseEntity<List<CouncilResponse>> getAllCouncil() throws Exception {
-        List<CouncilResponse> councils = councilService.getAllCouncil();
+    public ResponseEntity<List<CouncilsResponse>> getAllCouncil() throws Exception {
+        List<CouncilsResponse> councils = councilService.getAllCouncil();
         return ResponseEntity.ok(councils);
     }
 

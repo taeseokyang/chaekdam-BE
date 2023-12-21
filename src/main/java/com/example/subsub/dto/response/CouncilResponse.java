@@ -14,6 +14,7 @@ import java.util.List;
 public class CouncilResponse {
 
     private Integer councilId;
+    private String college;
     private String name;
     private String location;
     private String operatingHours;
@@ -22,6 +23,7 @@ public class CouncilResponse {
     @Builder
     public CouncilResponse(Council council){
         councilId = council.getCouncilId();
+        college = council.getCollege();
         name = council.getName();
         location = council.getLocation();
         operatingHours = council.getOperatingHours();

@@ -20,6 +20,9 @@ public class Council {
     private Integer councilId;
 
     @Column(nullable = false)
+    private String college;
+
+    @Column(nullable = false)
     private String name;
 
     @Column(nullable = false)
