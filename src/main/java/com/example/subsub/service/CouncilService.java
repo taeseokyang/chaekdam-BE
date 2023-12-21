@@ -45,7 +45,7 @@ public class CouncilService {
     // 모두 조회
     public List<CouncilsResponse> getAllCouncil() {
         List<CouncilsResponse> councilsDTO = new ArrayList<>();
-        List<Council> councils = councilRepository.findAll();
+        List<Council> councils = councilRepository.findAllByOrderByCollege();
         for(Council council : councils){
             CouncilsResponse dto = new CouncilsResponse();
             dto.setCouncilId(council.getCouncilId());

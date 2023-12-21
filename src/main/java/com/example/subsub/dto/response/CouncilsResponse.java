@@ -18,12 +18,12 @@ public class CouncilsResponse {
     private String name;
     private Integer providedItemCount;
     private Integer rentalItemCount;
-//    @Builder
-//    public CouncilsResponse(Council council, Integer pic, Integer ric){
-//        councilId = council.getCouncilId();
-//        college = council.getCollege();
-//        name = council.getName();
-//        providedItemCount = pic;
-//        rentalItemCount = ric;
-//    }
+    @Builder
+    public CouncilsResponse(Council council, Integer pic, Integer ric){
+        councilId = council.getCouncilId();
+        college = council.getCollege();
+        name = council.getName();
+        providedItemCount = pic;
+        rentalItemCount = ric;
+    }
 }
