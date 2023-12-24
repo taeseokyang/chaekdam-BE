@@ -23,6 +23,9 @@ public class User {
     @Column(nullable = false)
     private String nickName;
 
+    @Column
+    private String imgPath = "default.png";
+
     @Column(nullable = false)
     private String passWord;
 

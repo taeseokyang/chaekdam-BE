@@ -11,23 +11,19 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-public class CouncilResponse {
+public class CouncilsResponse {
 
     private Integer councilId;
     private String college;
     private String name;
-    private String location;
-    private String operatingHours;
-    private String usageGuidelines;
-    private List<CouncilItem> items = new ArrayList<>();
+    private Integer providedItemCount;
+    private Integer rentalItemCount;
     @Builder
-    public CouncilResponse(Council council){
+    public CouncilsResponse(Council council, Integer pic, Integer ric){
         councilId = council.getCouncilId();
         college = council.getCollege();
         name = council.getName();
-        location = council.getLocation();
-        operatingHours = council.getOperatingHours();
-        usageGuidelines = council.getUsageGuidelines();
-        items = council.getItems();
+        providedItemCount = pic;
+        rentalItemCount = ric;
     }
 }

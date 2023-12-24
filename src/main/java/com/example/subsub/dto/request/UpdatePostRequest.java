@@ -12,6 +12,7 @@ public class UpdatePostRequest {
     private String location;
     private String locationDetail;
     private long rentalFee;
+    private String security;
     private LocalDate needAt;
     private LocalDate returnAt;
     private String content;

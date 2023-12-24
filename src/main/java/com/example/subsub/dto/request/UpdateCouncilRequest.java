@@ -8,6 +8,7 @@ import java.time.LocalDate;
 @Getter
 @NoArgsConstructor
 public class UpdateCouncilRequest {
+    private String college;
     private String name;
     private String location;
     private String operatingHours;

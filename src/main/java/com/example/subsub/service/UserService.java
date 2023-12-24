@@ -9,6 +9,7 @@ import com.example.subsub.dto.request.UpdateUserRequest;
 import com.example.subsub.dto.response.RegisterResponse;
 import com.example.subsub.dto.request.UserRequest;
 import com.example.subsub.dto.response.UserResponse;
+import com.example.subsub.utils.FilePath;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.UUID;
 
 @Service
 @Transactional
@@ -36,6 +43,7 @@ public class UserService {
                         .build();
                 return new ResponseEntity<>(signResponse, HttpStatus.UNAUTHORIZED);
             }
+
             UserResponse signResponse= UserResponse.builder()
                     .id(user.getId())
                     .userId(user.getUserId())
@@ -53,18 +61,32 @@ public class UserService {
         return new ResponseEntity<>(signResponse, HttpStatus.NOT_FOUND);
     }
 
-    public ResponseEntity<RegisterResponse> register(UserRequest request) throws Exception {
+    public ResponseEntity<RegisterResponse> register(UserRequest request, MultipartFile pic) throws Exception {
         try {
+
+            if (userRepository.existsUserByUserId(request.getUserid())){
+                return new ResponseEntity<>(new RegisterResponse(false, "중복된 ID"), HttpStatus.CONFLICT);
+            }
+            String imageFileName = "default.png";
+
+            if(pic!=null){
+                UUID uuid = UUID.randomUUID();
+                imageFileName = uuid+"_"+pic.getOriginalFilename();
+                Path imagePath = Paths.get(FilePath.IMAGEPATH+imageFileName);
+                try{
+                    Files.write(imagePath,pic.getBytes());
+                }catch (Exception e){
+
+                }
+            }
             User user = User.builder()
                     .userId(request.getUserid())
                     .passWord(passwordEncoder.encode(request.getPassword()))
                     .nickName(request.getNickname())
+                    .imgPath(imageFileName)
                     .build();
 
             user.setRoles(Role.valueOf("USER"));
-            if (userRepository.existsUserByUserId(user.getUserId())){
-                return new ResponseEntity<>(new RegisterResponse(false, "중복된 ID"), HttpStatus.CONFLICT);
-            }
             userRepository.save(user);
         } catch (Exception e) {
             System.out.println(e.getMessage());

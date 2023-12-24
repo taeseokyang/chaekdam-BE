@@ -1,7 +1,10 @@
 package com.example.subsub.service;
 
 import com.example.subsub.domain.Council;
+import com.example.subsub.domain.ItemType;
 import com.example.subsub.dto.response.CouncilResponse;
+import com.example.subsub.dto.response.CouncilsResponse;
+import com.example.subsub.repository.CouncilItemRepository;
 import com.example.subsub.repository.CouncilRepository;
 import com.example.subsub.dto.request.AddCouncilRequest;
 import com.example.subsub.dto.request.UpdateCouncilRequest;
@@ -20,11 +23,13 @@ import java.util.List;
 public class CouncilService {
 
     private final CouncilRepository councilRepository;
+    private final CouncilItemRepository councilItemRepository;
 
     // 생성
     public Council save(AddCouncilRequest request) {
         Council council = Council.builder()
                 .name(request.getName())
+                .college(request.getCollege())
                 .location(request.getLocation())
                 .operatingHours(request.getOperatingHours())
                 .usageGuidelines(request.getUsageGuidelines())
@@ -38,17 +43,16 @@ public class CouncilService {
     }
 
     // 모두 조회
-    public List<CouncilResponse> getAllCouncil() {
-        List<CouncilResponse> councilsDTO = new ArrayList<>();
-        List<Council> councils = councilRepository.findAll();
+    public List<CouncilsResponse> getAllCouncil() {
+        List<CouncilsResponse> councilsDTO = new ArrayList<>();
+        List<Council> councils = councilRepository.findAllByOrderByCollege();
         for(Council council : councils){
-            CouncilResponse dto = new CouncilResponse();
+            CouncilsResponse dto = new CouncilsResponse();
             dto.setCouncilId(council.getCouncilId());
+            dto.setCollege(council.getCollege());
             dto.setName(council.getName());
-            dto.setLocation(council.getLocation());
-            dto.setOperatingHours(council.getOperatingHours());
-            dto.setUsageGuidelines(council.getUsageGuidelines());
-            dto.setItems(council.getItems());
+            dto.setProvidedItemCount(councilItemRepository.countByCouncilAndType(council, ItemType.PROVIDED));
+            dto.setRentalItemCount(councilItemRepository.countByCouncilAndType(council, ItemType.RENTAL));
             councilsDTO.add(dto);
         }
         return councilsDTO;
@@ -66,6 +70,7 @@ public class CouncilService {
     public ResponseEntity<CouncilResponse> update(Integer id, UpdateCouncilRequest request) {
         Council council = councilRepository.findById(id).orElseThrow(IllegalArgumentException::new);
         council.setName(request.getName());
+        council.setCollege(request.getCollege());
         council.setLocation(request.getLocation());
         council.setOperatingHours(request.getOperatingHours());
         council.setUsageGuidelines(request.getUsageGuidelines());
