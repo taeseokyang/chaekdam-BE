@@ -15,7 +15,6 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 public class Post {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer postId;
@@ -33,6 +32,9 @@ public class Post {
     private long rentalFee;
 
     @Column(nullable = false)
+    private String security;
+
+    @Column(nullable = false)
     private LocalDateTime createdAt;
 
     @Column(nullable = false)
@@ -46,9 +48,6 @@ public class Post {
 
     @Column(nullable = false)
     private Boolean isClose;
-
-//    @OneToMany(mappedBy = "post", fetch = FetchType.EAGER, orphanRemoval = true)
-//    private List<Comment> comments = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id")

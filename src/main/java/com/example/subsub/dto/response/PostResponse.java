@@ -20,6 +20,7 @@ public class PostResponse {
     private String location;
     private String locationDetail;
     private Long rentalFee;
+    private String security;
     private LocalDateTime createdAt;
     private LocalDate needAt;
     private LocalDate returnAt;
@@ -34,6 +35,7 @@ public class PostResponse {
         location = post.getLocation();
         locationDetail = post.getLocationDetail();
         rentalFee = post.getRentalFee();
+        security = post.getSecurity();
         createdAt = post.getCreatedAt();
         needAt = post.getNeedAt();
         returnAt = post.getReturnAt();

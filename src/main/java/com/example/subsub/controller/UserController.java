@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,8 +24,8 @@ public class UserController {
     }
 
     @PostMapping(value = "/register")
-    public ResponseEntity<RegisterResponse> signup(@RequestBody UserRequest request) throws Exception {
-        return userService.register(request);
+    public ResponseEntity<RegisterResponse> signup(@RequestPart UserRequest request, @RequestPart(required = false) MultipartFile pic) throws Exception {
+        return userService.register(request, pic);
     }
 
     @GetMapping("/account")

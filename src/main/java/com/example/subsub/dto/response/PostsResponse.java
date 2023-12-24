@@ -16,6 +16,7 @@ public class PostsResponse {
     private String location;
     private String locationDetail;
     private Long rentalFee;
+    private String security;
     private LocalDateTime createdAt;
     private Integer chatCount;
     private boolean isClose;

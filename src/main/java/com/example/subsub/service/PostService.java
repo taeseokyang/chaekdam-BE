@@ -25,7 +25,6 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final UserRepository userRepository;
-//    private final CommentRepository commentRepository;
 
     // 생성
     public Post save(AddPostRequest request, String userName) {
@@ -37,6 +36,7 @@ public class PostService {
                 .location(request.getLocation())
                 .locationDetail(request.getLocationDetail())
                 .rentalFee(request.getRentalFee())
+                .security(request.getSecurity())
                 .createdAt(createdAt)
                 .needAt(request.getNeedAt())
                 .returnAt(request.getReturnAt())
@@ -68,6 +68,7 @@ public class PostService {
             dto.setLocation(post.getLocation());
             dto.setLocationDetail(post.getLocationDetail());
             dto.setRentalFee(post.getRentalFee());
+            dto.setSecurity(post.getSecurity());
             dto.setCreatedAt(post.getCreatedAt());
             dto.setClose(post.getIsClose());
 //            dto.setCommentCount(commentRepository.countByPost(post));
@@ -89,11 +90,9 @@ public class PostService {
             dto.setLocation(post.getLocation());
             dto.setLocationDetail(post.getLocationDetail());
             dto.setRentalFee(post.getRentalFee());
+            dto.setSecurity(post.getSecurity());
             dto.setCreatedAt(post.getCreatedAt());
             dto.setClose(post.getIsClose());
-            //챗 카운트로 바꿔야
-//            dto.setCommentCount(commentRepository.countByPost(post));
-
             postsDTO.add(dto);
         }
         return postsDTO;
@@ -110,10 +109,9 @@ public class PostService {
             dto.setLocation(post.getLocation());
             dto.setLocationDetail(post.getLocationDetail());
             dto.setRentalFee(post.getRentalFee());
+            dto.setSecurity(post.getSecurity());
             dto.setCreatedAt(post.getCreatedAt());
             dto.setClose(post.getIsClose());
-//            dto.setCommentCount(commentRepository.countByPost(post));
-
             postsDTO.add(dto);
         }
         return postsDTO;
@@ -136,6 +134,7 @@ public class PostService {
         post.setNeedAt(request.getNeedAt());
         post.setReturnAt(request.getReturnAt());
         post.setRentalFee(request.getRentalFee());
+        post.setSecurity(request.getSecurity());
         Post updatedPost = postRepository.save(post);
         return ResponseEntity.ok(new PostResponse(updatedPost));
     }
