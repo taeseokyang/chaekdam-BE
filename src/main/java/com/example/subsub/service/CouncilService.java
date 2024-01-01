@@ -77,6 +77,7 @@ public class CouncilService {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Council not found with ID: " + councilId);
     }
 
+
     public ResponseEntity<CouncilResponse> update(Integer id, UpdateCouncilRequest request) {
         Council council = councilRepository.findById(id).orElseThrow(IllegalArgumentException::new);
         council.setLocation(request.getLocation());
