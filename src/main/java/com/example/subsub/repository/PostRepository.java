@@ -18,7 +18,7 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
     List<Post> findAllByLocationOrderByIsCloseAscCreatedAtDesc(String location);
     Optional<Post> findByPostId(Integer postId);
     void deleteByPostId(Integer postId);
-    List<Post> findTop10ByIsCloseOrderByCreatedAtDesc(boolean isClose);
+    List<Post> findTop8ByIsCloseOrderByCreatedAtDesc(boolean isClose);
 
 
 

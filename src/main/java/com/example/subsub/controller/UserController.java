@@ -38,10 +38,10 @@ public class UserController {
         return userService.getUser(id);
     }
 
-    @PutMapping("/admin/user/certification")
-    public ResponseEntity<UserResponse>  updateCertification(@RequestParam String id,@RequestBody UpdateUserCertifiRequest request) {
-        return userService.updateCertification(id, request);
-    }
+//    @PutMapping("/admin/user/certification")
+//    public ResponseEntity<UserResponse>  updateCertification(@RequestParam String id,@RequestBody UpdateUserCertifiRequest request) {
+//        return userService.updateCertification(id, request);
+//    }
     @PutMapping("/user/update")
     public ResponseEntity<UserResponse>  updateNickname(@RequestBody UpdateUserRequest request, Authentication authentication) {
         if (authentication == null) return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);

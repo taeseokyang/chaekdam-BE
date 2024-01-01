@@ -98,9 +98,9 @@ public class PostService {
         return postsDTO;
     }
 
-    public List<PostsResponse> getTop10Post() {
+    public List<PostsResponse> getTop8Post() {
         List<PostsResponse> postsDTO = new ArrayList<>();
-        List<Post> posts = postRepository.findTop10ByIsCloseOrderByCreatedAtDesc(false);
+        List<Post> posts = postRepository.findTop8ByIsCloseOrderByCreatedAtDesc(false);
         for(Post post : posts){
             PostsResponse dto = new PostsResponse();
             dto.setPostId(post.getPostId());

@@ -2,11 +2,13 @@ package com.example.subsub.service;
 
 import com.example.subsub.domain.Council;
 import com.example.subsub.domain.CouncilItem;
+import com.example.subsub.domain.User;
 import com.example.subsub.repository.CouncilItemRepository;
 import com.example.subsub.repository.CouncilRepository;
 import com.example.subsub.dto.request.AddCouncilItemRequest;
 import com.example.subsub.dto.request.UpdateCouncilItemRequest;
 import com.example.subsub.dto.response.CouncilItemResponse;
+import com.example.subsub.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,10 +25,23 @@ public class CouncilItemService {
 
     private final CouncilItemRepository councilItemRepository;
     private final CouncilRepository councilRepository;
+    private final UserRepository userRepository;
 
     // 생성
     public CouncilItem save(AddCouncilItemRequest request) {
         Council council = councilRepository.findById(request.getCouncilId()).get();
+        CouncilItem councilItem = CouncilItem.builder()
+                .council(council)
+                .name(request.getName())
+                .type(request.getType())
+                .build();
+        return councilItemRepository.save(councilItem);
+    }
+
+    // 생성
+    public CouncilItem CouncilSave(AddCouncilItemRequest request, String manager) {
+        User user = userRepository.findByUserId(manager).get();
+        Council council = councilRepository.findByManager(user);
         CouncilItem councilItem = CouncilItem.builder()
                 .council(council)
                 .name(request.getName())

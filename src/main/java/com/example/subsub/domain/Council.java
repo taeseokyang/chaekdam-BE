@@ -1,5 +1,6 @@
 package com.example.subsub.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -18,6 +19,11 @@ public class Council {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer councilId;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id")
+    @JsonIgnore
+    private User manager;
 
     @Column(nullable = false)
     private String college;
