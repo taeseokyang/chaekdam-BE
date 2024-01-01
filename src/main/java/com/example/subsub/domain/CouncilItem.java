@@ -20,6 +20,9 @@ public class CouncilItem {
     @Enumerated(EnumType.STRING)
     private ItemType type;
 
+    @Column(nullable = false)
+    private Integer quantity;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "councilId")
     @JsonIgnore

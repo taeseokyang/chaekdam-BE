@@ -12,11 +12,13 @@ import lombok.*;
 public class CouncilItemResponse {
     private Integer councilId;
     private String name;
+    private Integer quantity;
     private ItemType type;
     @Builder
     public CouncilItemResponse(CouncilItem councilItem){
         councilId = councilItem.getCouncil().getCouncilId();
         name = councilItem.getName();
+        quantity = councilItem.getQuantity();
         type = councilItem.getType();
     }
 }

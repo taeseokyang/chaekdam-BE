@@ -53,8 +53,8 @@ public class PostApiController {
     }
 
     @GetMapping("/news")
-    public ResponseEntity<List<PostsResponse>> getTop10Post() throws Exception {
-        List<PostsResponse> posts = postService.getTop10Post();
+    public ResponseEntity<List<PostsResponse>> getTop8Post() throws Exception {
+        List<PostsResponse> posts = postService.getTop8Post();
         return ResponseEntity.ok(posts);
     }
 
