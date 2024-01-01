@@ -32,6 +32,7 @@ public class CouncilItemService {
         Council council = councilRepository.findById(request.getCouncilId()).get();
         CouncilItem councilItem = CouncilItem.builder()
                 .council(council)
+                .quantity(0)
                 .name(request.getName())
                 .type(request.getType())
                 .build();
@@ -44,6 +45,7 @@ public class CouncilItemService {
         Council council = councilRepository.findByManager(user);
         CouncilItem councilItem = CouncilItem.builder()
                 .council(council)
+                .quantity(0)
                 .name(request.getName())
                 .type(request.getType())
                 .build();
@@ -59,6 +61,7 @@ public class CouncilItemService {
             CouncilItemResponse dto = new CouncilItemResponse();
             dto.setCouncilId(councilItem.getCouncil().getCouncilId());
             dto.setName(councilItem.getName());
+            dto.setQuantity(councilItem.getQuantity());
             dto.setType(councilItem.getType());
             councilItemsDTO.add(dto);
         }
@@ -76,8 +79,7 @@ public class CouncilItemService {
 
     public ResponseEntity<CouncilItemResponse> update(Integer id, UpdateCouncilItemRequest request) {
         CouncilItem councilItem = councilItemRepository.findById(id).orElseThrow(IllegalArgumentException::new);
-        councilItem.setName(request.getName());
-        councilItem.setType(request.getType());
+        councilItem.setQuantity(request.getQuantity());
         CouncilItem updatedCouncilItem = councilItemRepository.save(councilItem);
         return ResponseEntity.ok(new CouncilItemResponse(updatedCouncilItem));
     }

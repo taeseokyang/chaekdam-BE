@@ -79,8 +79,6 @@ public class CouncilService {
 
     public ResponseEntity<CouncilResponse> update(Integer id, UpdateCouncilRequest request) {
         Council council = councilRepository.findById(id).orElseThrow(IllegalArgumentException::new);
-        council.setName(request.getName());
-        council.setCollege(request.getCollege());
         council.setLocation(request.getLocation());
         council.setOperatingHours(request.getOperatingHours());
         council.setUsageGuidelines(request.getUsageGuidelines());

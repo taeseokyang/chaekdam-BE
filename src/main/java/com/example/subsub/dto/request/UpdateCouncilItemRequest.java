@@ -7,6 +7,5 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class UpdateCouncilItemRequest {
-    private String name;
-    private ItemType type;
+    private Integer quantity;
 }
