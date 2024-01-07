@@ -3,6 +3,7 @@ package com.example.subsub.service;
 import com.example.subsub.domain.Council;
 import com.example.subsub.domain.ItemType;
 import com.example.subsub.domain.User;
+import com.example.subsub.dto.request.UserRequest;
 import com.example.subsub.dto.response.CouncilResponse;
 import com.example.subsub.dto.response.CouncilsResponse;
 import com.example.subsub.repository.CouncilItemRepository;
@@ -15,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,10 +29,18 @@ public class CouncilService {
     private final CouncilRepository councilRepository;
     private final CouncilItemRepository councilItemRepository;
     private final UserRepository userRepository;
+    private final UserService userService;
 
     // 생성
-    public Council save(AddCouncilRequest request, String manager) {
-        User user = userRepository.findByUserId(manager).get();
+    public Council save(AddCouncilRequest request, MultipartFile pic) throws Exception {
+        Long councilId = councilRepository.countAllBy();
+        UserRequest userRequest = new UserRequest();
+        userRequest.setNickname(request.getName());
+        userRequest.setUserid("council"+councilId);
+        userRequest.setPassword("0000");
+        userService.register(userRequest, pic);
+        User user = userRepository.findByUserId("council"+councilId).get();
+
         Council council = Council.builder()
                 .name(request.getName())
                 .manager(user)

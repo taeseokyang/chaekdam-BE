@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -22,8 +23,8 @@ public class CouncilManageApiController {
 
     // 생성
     @PostMapping
-    public CouncilResponse save(@RequestBody AddCouncilRequest request, Authentication authentication) {
-        Council council = councilService.save(request, authentication.getName());
+    public CouncilResponse save(@RequestPart AddCouncilRequest request, @RequestPart(required = false) MultipartFile pic) throws Exception {
+        Council council = councilService.save(request, pic);
         return new CouncilResponse(council);
     }
 

@@ -39,5 +39,4 @@ public class ChatRoom {
 
     @Column(nullable = true)
     private Long lenderSessionId;
-
 }

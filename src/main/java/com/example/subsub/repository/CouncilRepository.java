@@ -12,7 +12,7 @@ import java.util.List;
 @Transactional
 public interface CouncilRepository extends JpaRepository<Council, Integer> {
     void deleteByCouncilId(Integer councilId);
-
+    Long countAllBy();
     List<Council> findAllByOrderByCollege();
     Council findByManager(User manager);
 }
