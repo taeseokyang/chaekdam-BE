@@ -24,6 +24,12 @@ public class AnnoApiController {
         return ResponseEntity.ok().body(new AnnoResponse(anno));
     }
 
+    // 모두 조회 by userid
+    @GetMapping("/{id}")
+    public ResponseEntity<AnnoResponse> getAnno(@PathVariable Integer id) throws Exception {
+        AnnoResponse annos = annoService.getAnno(id);
+        return ResponseEntity.ok(annos);
+    }
 
     // 모두 조회 by userid
     @GetMapping("/all")

@@ -39,7 +39,7 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
         ChatDTO chatMessage = mapper.readValue(payload, ChatDTO.class);
 //        log.info("session {}", chatMessage.toString());
         log.info("{} 연결됨", session.getId());
-        handleAction(session, chatMessage, chatMessage.getRoomId(),chatService);
+        handleAction(session, chatMessage,chatService);
     }
 
     @Override
@@ -51,8 +51,8 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
         log.info("세션 메모리 크기 {}", sessionToIdMap.size());
     }
 
-    public void handleAction(WebSocketSession session, ChatDTO message, String roodId,ChatService chatService) {
-        ChatRoom chatRoom = chatRoomRepository.findByRoomId(roodId);
+    public void handleAction(WebSocketSession session, ChatDTO message,ChatService chatService) {
+        ChatRoom chatRoom = chatRoomRepository.findByRoomId(message.getRoomId());
 
         if (message.getType().equals(MessageType.ENTER)) {
             session_Idx += 1;
@@ -69,7 +69,7 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
 //            message.setMessage(message.getSender() + " 님이 입장하셨습니다");
 //            sendMessage(message, chatRoom,chatService);
         } else if (message.getType().equals(MessageType.TALK)) {
-            messageService.save(message.getMessage(),roodId,message.getSender(),message.getUserType());
+            messageService.save(message.getMessage(),message.getRoomId(),message.getSender(),message.getUserType());
             message.setMessage(message.getMessage());
             sendMessage(message, chatRoom, chatService);
         }
