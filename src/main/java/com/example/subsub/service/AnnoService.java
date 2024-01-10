@@ -43,6 +43,13 @@ public class AnnoService {
         }
         return annosDTO;
     }
+
+    public AnnoResponse getAnno(Integer annoId) {
+        Announcement anno = annoRepository.findById(annoId).get();
+
+
+        return new AnnoResponse(anno);
+    }
     //삭제
     public ResponseEntity<String> deletePost(Integer annoId){
         if (annoRepository.existsById(annoId)) {
