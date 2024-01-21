@@ -3,6 +3,7 @@ package com.example.subsub.controller;
 import com.example.subsub.domain.Post;
 import com.example.subsub.dto.request.AddPostRequest;
 import com.example.subsub.dto.request.UpdatePostRequest;
+import com.example.subsub.dto.request.UserRequest;
 import com.example.subsub.dto.response.PostResponse;
 import com.example.subsub.dto.response.PostsResponse;
 import com.example.subsub.repository.PostRepository;
@@ -12,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -24,7 +26,7 @@ public class PostApiController {
 
     // 생성
     @PostMapping
-    public ResponseEntity<PostResponse> save(@RequestBody AddPostRequest request, Authentication authentication) {
+    public ResponseEntity<PostResponse> save(@RequestPart AddPostRequest request, @RequestPart(required = false) MultipartFile pic, Authentication authentication) {
         if (authentication == null) return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         Post post = postService.save(request, authentication.getName());
         return ResponseEntity.ok().body(new PostResponse(post));
