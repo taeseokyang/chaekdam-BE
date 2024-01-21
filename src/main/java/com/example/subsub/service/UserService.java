@@ -32,6 +32,61 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
+    private final OAuthService oAuthService;
+
+    public ResponseEntity<UserResponse> kakaoLogin(String code) throws Exception {
+        String token = oAuthService.getKakaoAccessToken(code);
+        String email = oAuthService.getEmail(token);
+
+        if (userRepository.existsUserByUserId(email)){
+            User user = userRepository.findByUserId(email).get();
+            UserResponse signResponse= UserResponse.builder()
+                    .id(user.getId())
+                    .userId(user.getUserId())
+                    .nickname(user.getNickName())
+                    .roles(user.getRoles())
+                    .token(jwtProvider.createToken(user.getUserId(), user.getRoles()))
+                    .message("로그인 성공")
+                    .build();
+            return new ResponseEntity<>(signResponse, HttpStatus.OK);
+
+        }
+        UserResponse signResponse=  UserResponse.builder()
+                .userId(email)
+                .message("계정이 존재하지 않아 회원가입이 필요합니다")
+                .build();
+        return new ResponseEntity<>(signResponse, HttpStatus.CREATED);
+    }
+
+    public ResponseEntity<UserResponse> kakaoRegister(String nickname, String email) throws Exception {
+        try {
+            if (userRepository.existsUserByUserId(email)){
+                return new ResponseEntity<>(HttpStatus.CONFLICT);
+            }
+            User user = User.builder()
+                    .userId(email)
+                    .nickName(nickname)
+                    .build();
+
+            user.setRoles(Role.valueOf("USER"));
+            userRepository.save(user);
+            UserResponse signResponse= UserResponse.builder()
+                    .id(user.getId())
+                    .userId(user.getUserId())
+                    .nickname(user.getNickName())
+                    .roles(user.getRoles())
+                    .token(jwtProvider.createToken(user.getUserId(), user.getRoles()))
+                    .message("로그인 성공")
+                    .build();
+            return new ResponseEntity<>(signResponse, HttpStatus.OK);
+
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            throw e;
+        }
+    }
+
 
     public ResponseEntity<UserResponse> login(UserRequest request) throws Exception {
         if (userRepository.existsUserByUserId(request.getUserid())){
@@ -121,4 +176,6 @@ public class UserService {
         User updatedUser = userRepository.save(user);
         return ResponseEntity.ok(new UserResponse(updatedUser, "변경 성공"));
     }
+
+
 }

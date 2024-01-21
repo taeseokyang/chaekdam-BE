@@ -26,7 +26,7 @@ public class User {
     @Column
     private String imgPath = "default.png";
 
-    @Column(nullable = false)
+    @Column
     private String passWord;
 
 //    @OneToMany(mappedBy = "user",fetch = FetchType.EAGER)
