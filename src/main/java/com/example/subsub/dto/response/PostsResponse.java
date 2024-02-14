@@ -21,6 +21,5 @@ public class PostsResponse {
     private Integer chatCount;
     private boolean isClose;
     private String userId;
-
-
+    private String postImgPath;
 }

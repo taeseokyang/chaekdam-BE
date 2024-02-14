@@ -16,14 +16,16 @@ public class CouncilsResponse {
     private Integer councilId;
     private String college;
     private String name;
+    private String imgPath;
     private Integer providedItemCount;
     private Integer rentalItemCount;
     @Builder
-    public CouncilsResponse(Council council, Integer pic, Integer ric){
+    public CouncilsResponse(Council council, Integer pic, Integer ric, String imgPath){
         councilId = council.getCouncilId();
         college = council.getCollege();
         name = council.getName();
         providedItemCount = pic;
         rentalItemCount = ric;
+        this.imgPath = imgPath;
     }
 }

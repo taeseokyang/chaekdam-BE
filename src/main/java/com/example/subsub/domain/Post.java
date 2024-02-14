@@ -54,4 +54,7 @@ public class Post {
     @JsonIgnore
     private User user;
 
+    @Column(nullable = false)
+    private String imgPath;
+
 }

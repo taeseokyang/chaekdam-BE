@@ -32,7 +32,7 @@ public class CouncilManageApiController {
     @GetMapping
     public ResponseEntity<CouncilResponse> findByManager(Authentication authentication) {
         Council council = councilService.getCouncilByManager(authentication.getName());
-        return ResponseEntity.ok().body(new CouncilResponse(council));
+        return ResponseEntity.ok().body(new CouncilResponse(council, council.getManager().getImgPath()));
     }
 
 

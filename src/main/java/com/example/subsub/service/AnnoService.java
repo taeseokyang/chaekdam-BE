@@ -36,6 +36,7 @@ public class AnnoService {
 
         for(Announcement anno : annos){
             AnnoResponse dto = new AnnoResponse();
+            dto.setAnnoId(anno.getAnnoId());
             dto.setTitle(anno.getTitle());
             dto.setContent(anno.getContent());
             dto.setCreatedAt(anno.getCreatedAt());

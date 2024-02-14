@@ -63,9 +63,15 @@ public class UserService {
             if (userRepository.existsUserByUserId(email)){
                 return new ResponseEntity<>(HttpStatus.CONFLICT);
             }
+            String imageFileName = "default.png";
+            String id = UUID.randomUUID().toString();
             User user = User.builder()
+                    .id(id)
                     .userId(email)
                     .nickName(nickname)
+                    .imgPath(imageFileName)
+                    .borrowCount(0)
+                    .lendCount(0)
                     .build();
 
             user.setRoles(Role.valueOf("USER"));
@@ -134,13 +140,16 @@ public class UserService {
 
                 }
             }
+            String id = UUID.randomUUID().toString();
             User user = User.builder()
+                    .id(id)
                     .userId(request.getUserid())
                     .passWord(passwordEncoder.encode(request.getPassword()))
                     .nickName(request.getNickname())
                     .imgPath(imageFileName)
+                    .borrowCount(0)
+                    .lendCount(0)
                     .build();
-
             user.setRoles(Role.valueOf("USER"));
             userRepository.save(user);
         } catch (Exception e) {
@@ -150,9 +159,9 @@ public class UserService {
         return new ResponseEntity<>(new RegisterResponse(true, "회원가입 성공"), HttpStatus.OK);
     }
 
-    public ResponseEntity<UserResponse> getUser(String userId) throws Exception {
-        if (userRepository.existsUserByUserId(userId)){
-            User user = userRepository.findByUserId(userId).get();
+    public ResponseEntity<UserResponse> getUser(String id) throws Exception {
+        if (userRepository.existsUserById(id)){
+            User user = userRepository.findById(id).get();
             return new ResponseEntity<>(new UserResponse(user, "계정 조회 성공"), HttpStatus.OK);
         }else{
             UserResponse signResponse = UserResponse.builder()

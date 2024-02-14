@@ -5,11 +5,11 @@ import com.example.subsub.domain.UserType;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@Setter
 public class ChatRoomsResponse {
     private Integer id;
     private String roomId;

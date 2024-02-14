@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class AddChatRoomRequest {
     private String roomId;
-    private Long borrowerId;
-    private Long renderId;
+    private String borrowerId;
+    private String renderId;
     private Integer postId;
 }

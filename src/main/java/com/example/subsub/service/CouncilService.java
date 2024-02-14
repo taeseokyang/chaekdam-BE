@@ -73,6 +73,24 @@ public class CouncilService {
             dto.setName(council.getName());
             dto.setProvidedItemCount(councilItemRepository.countByCouncilAndType(council, ItemType.PROVIDED));
             dto.setRentalItemCount(councilItemRepository.countByCouncilAndType(council, ItemType.RENTAL));
+            dto.setImgPath(council.getManager().getImgPath());
+            councilsDTO.add(dto);
+        }
+        return councilsDTO;
+    }
+
+    // 모두 조회
+    public List<CouncilsResponse> getCouncilsByCampus(String campus) {
+        List<CouncilsResponse> councilsDTO = new ArrayList<>();
+        List<Council> councils = councilRepository.findAllByCollegeStartingWithOrderByCollege(campus.equals("global") ? "G" : "M");
+        for(Council council : councils){
+            CouncilsResponse dto = new CouncilsResponse();
+            dto.setCouncilId(council.getCouncilId());
+            dto.setCollege(council.getCollege());
+            dto.setName(council.getName());
+            dto.setProvidedItemCount(councilItemRepository.countByCouncilAndType(council, ItemType.PROVIDED));
+            dto.setRentalItemCount(councilItemRepository.countByCouncilAndType(council, ItemType.RENTAL));
+            dto.setImgPath(council.getManager().getImgPath());
             councilsDTO.add(dto);
         }
         return councilsDTO;

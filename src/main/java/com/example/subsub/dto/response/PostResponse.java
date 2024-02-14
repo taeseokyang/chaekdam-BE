@@ -26,7 +26,11 @@ public class PostResponse {
     private LocalDate returnAt;
     private String content;
     private Boolean isClose;
+    private String nickname;
     private String userId;
+    private String userImgPath;
+    private String postImgPath;
+    private boolean isCertification;
 
     @Builder
     public PostResponse(Post post){
@@ -42,6 +46,10 @@ public class PostResponse {
         content = post.getContent();
         isClose = post.getIsClose();
 //        comments = post.getComments();
-        userId = post.getUser().getUserId();
+        nickname = post.getUser().getNickName();
+        userId = post.getUser().getId();
+        userImgPath = post.getUser().getImgPath();
+        postImgPath = post.getImgPath();
+        isCertification =  post.getUser().isCertification();
     }
 }

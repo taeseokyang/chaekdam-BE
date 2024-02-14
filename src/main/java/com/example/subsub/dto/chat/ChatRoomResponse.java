@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 
 @AllArgsConstructor
@@ -18,10 +19,10 @@ public class ChatRoomResponse {
 
     private Integer id;
     private String roomId;
-    private Long borrowerId;
-    private String borrowerName;
-    private Long renderId;
-    private String renderName;
+    private String borrowerId;
+    private String borrowerNickname;
+    private String renderId;
+    private String renderNickname;
     private Integer postId;
     private String postName;
 
@@ -30,9 +31,9 @@ public class ChatRoomResponse {
         id = chatRoom.getId();
         roomId = chatRoom.getRoomId();
         borrowerId = chatRoom.getBorrower().getId();
-        borrowerName = chatRoom.getBorrower().getUserId();
+        borrowerNickname = chatRoom.getBorrower().getNickName();
         renderId = chatRoom.getLender().getId();
-        renderName = chatRoom.getLender().getUserId();
+        renderNickname = chatRoom.getLender().getNickName();
         postId = chatRoom.getPost().getPostId();
         postName = chatRoom.getPost().getTitle();
     }

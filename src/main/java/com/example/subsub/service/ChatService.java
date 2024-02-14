@@ -34,16 +34,17 @@ public class ChatService {
         return chatRooms;
     }
 
-    public List<ChatRoomsResponse> findAllByUser(String userName){
+    public List<List<ChatRoomsResponse>> findAllByUser(String userName){
         if (userRepository.existsUserByUserId(userName)){
             User user = userRepository.findByUserId(userName).get();
-            List<ChatRoom> chatRoomsForBorrowing = chatRoomRepository.findAllByBorrower(user);
-            List<ChatRoom> chatRoomsForLending = chatRoomRepository.findAllByLender(user);
+            List<ChatRoom> chatRoomsForBorrowing = chatRoomRepository.findAllByBorrowerOrderByCreatedAtDesc(user);
+            List<ChatRoom> chatRoomsForLending = chatRoomRepository.findAllByLenderOrderByCreatedAtDesc(user);
+            List<List<ChatRoomsResponse>> BorrowAndLendDTO = new ArrayList<>();
 
-            List<ChatRoomsResponse> chatRoomsDTO = new ArrayList<>();
 
             String lastMessage;
             LocalDateTime lastMeesageTime;
+            List<ChatRoomsResponse> chatRoomsDTO = new ArrayList<>();
             for(ChatRoom chatRoom : chatRoomsForBorrowing){
                 Optional<Message> optionalLastMessage = messageRepository.findFirstByChatRoomOrderBySentAtDesc(chatRoom);
                 if (optionalLastMessage.isPresent()) {
@@ -56,6 +57,8 @@ public class ChatService {
                 ChatRoomsResponse dto = new ChatRoomsResponse(chatRoom, UserType.BORROWER, lastMessage, lastMeesageTime);
                 chatRoomsDTO.add(dto);
             }
+            BorrowAndLendDTO.add(chatRoomsDTO);
+            chatRoomsDTO = new ArrayList<>();
             for(ChatRoom chatRoom : chatRoomsForLending){
                 Optional<Message> optionalLastMessage = messageRepository.findFirstByChatRoomOrderBySentAtDesc(chatRoom);
                 if (optionalLastMessage.isPresent()) {
@@ -68,7 +71,8 @@ public class ChatService {
                 ChatRoomsResponse dto = new ChatRoomsResponse(chatRoom, UserType.LENDER, lastMessage, lastMeesageTime);
                 chatRoomsDTO.add(dto);
             }
-            return chatRoomsDTO;
+            BorrowAndLendDTO.add(chatRoomsDTO);
+            return BorrowAndLendDTO;
         }
         return new ArrayList<>();
     }
@@ -78,11 +82,17 @@ public class ChatService {
         User borrower = userRepository.findById(request.getBorrowerId()).get();
         User lender = userRepository.findById(request.getRenderId()).get();
         Post post = postRepository.findById(request.getPostId()).get();
+        Optional<ChatRoom> alreadyExistChatRoom = chatRoomRepository.findByBorrowerAndLenderAndPost(borrower,lender,post);
+        if (alreadyExistChatRoom.isPresent()){
+            return new ChatRoomResponse(alreadyExistChatRoom.get());
+        }
+        LocalDateTime createdAt = LocalDateTime.now();
         ChatRoom chatRoom = ChatRoom.builder()
                 .roomId(roomId)
                 .borrower(borrower)
                 .lender(lender)
                 .post(post)
+                .createdAt(createdAt)
                 .build();
         return new ChatRoomResponse(chatRoomRepository.save(chatRoom));
     }
