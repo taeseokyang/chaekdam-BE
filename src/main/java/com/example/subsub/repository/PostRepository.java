@@ -1,5 +1,6 @@
 package com.example.subsub.repository;
 
+import com.example.subsub.domain.Council;
 import com.example.subsub.domain.Post;
 import com.example.subsub.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -19,7 +20,6 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
     Optional<Post> findByPostId(Integer postId);
     void deleteByPostId(Integer postId);
     List<Post> findTop8ByIsCloseOrderByCreatedAtDesc(boolean isClose);
-
-
+    List<Post> findTop8ByIsCloseAndLocationStartingWithOrderByCreatedAtDesc(boolean isClose, String prefix);
 
 }

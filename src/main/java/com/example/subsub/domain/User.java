@@ -4,6 +4,7 @@ import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Entity(name = "users")
 @Builder
@@ -14,8 +15,8 @@ import java.util.List;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private String id;
 
     @Column(unique = true, nullable = false)
     private String userId;
@@ -40,6 +41,12 @@ public class User {
 
     @Column(nullable = false)
     private boolean isCertification = false;
+
+    @Column(nullable = false)
+    private Integer borrowCount = 0;
+
+    @Column(nullable = false)
+    private Integer lendCount = 0;
 
     public void setRoles(Role roles) {
         this.roles = roles;

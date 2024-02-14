@@ -41,7 +41,7 @@ public class ChatController {
 //    }
 
     @GetMapping("/user")
-    public ResponseEntity<List<ChatRoomsResponse>> findAllByUser(Authentication authentication){
+    public ResponseEntity<List<List<ChatRoomsResponse>> > findAllByUser(Authentication authentication){
         if (authentication == null) return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         return ResponseEntity.ok(chatService.findAllByUser(authentication.getName()));
     }

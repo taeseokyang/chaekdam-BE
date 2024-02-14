@@ -24,12 +24,18 @@ public class CouncilApiController {
     @GetMapping("/{id}")
     public ResponseEntity<CouncilResponse> findById(@PathVariable Integer id) {
         Council council = councilService.getCouncil(id);
-        return ResponseEntity.ok().body(new CouncilResponse(council));
+        return ResponseEntity.ok().body(new CouncilResponse(council, council.getManager().getImgPath()));
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<CouncilsResponse>> getAllCouncil() throws Exception {
-        List<CouncilsResponse> councils = councilService.getAllCouncil();
-        return ResponseEntity.ok(councils);
+    public ResponseEntity<List<CouncilsResponse>> getCouncils(@RequestParam(name = "campus", required = false) String campus) throws Exception {
+        if (campus == null){
+            List<CouncilsResponse> councils = councilService.getAllCouncil();
+            return ResponseEntity.ok(councils);
+        }else{
+            List<CouncilsResponse> councils = councilService.getCouncilsByCampus(campus);
+            return ResponseEntity.ok(councils);
+        }
     }
+
 }

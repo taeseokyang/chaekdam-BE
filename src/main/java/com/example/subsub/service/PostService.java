@@ -8,15 +8,21 @@ import com.example.subsub.dto.request.AddPostRequest;
 import com.example.subsub.dto.request.UpdatePostRequest;
 import com.example.subsub.dto.response.PostResponse;
 import com.example.subsub.dto.response.PostsResponse;
+import com.example.subsub.utils.FilePath;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -27,8 +33,21 @@ public class PostService {
     private final UserRepository userRepository;
 
     // 생성
-    public Post save(AddPostRequest request, String userName) {
+    public Post save(AddPostRequest request, String userName, MultipartFile pic) {
         User user = userRepository.findByUserId(userName).get();
+
+        String imageFileName = "default.png";
+        if(pic!=null){
+            UUID uuid = UUID.randomUUID();
+            imageFileName = uuid+"_"+pic.getOriginalFilename();
+            Path imagePath = Paths.get(FilePath.IMAGEPATH+imageFileName);
+            try{
+                Files.write(imagePath,pic.getBytes());
+            }catch (Exception e){
+
+            }
+        }
+
         LocalDateTime createdAt = LocalDateTime.now();
         Post post = Post.builder()
                 .title(request.getTitle())
@@ -42,6 +61,7 @@ public class PostService {
                 .returnAt(request.getReturnAt())
                 .isClose(false)
                 .user(user)
+                .imgPath(imageFileName)
                 .build();
         return postRepository.save(post);
     }
@@ -71,6 +91,7 @@ public class PostService {
             dto.setSecurity(post.getSecurity());
             dto.setCreatedAt(post.getCreatedAt());
             dto.setClose(post.getIsClose());
+            dto.setPostImgPath(post.getImgPath());
 //            dto.setCommentCount(commentRepository.countByPost(post));
 
             postsDTO.add(dto);
@@ -93,14 +114,15 @@ public class PostService {
             dto.setSecurity(post.getSecurity());
             dto.setCreatedAt(post.getCreatedAt());
             dto.setClose(post.getIsClose());
+            dto.setPostImgPath(post.getImgPath());
             postsDTO.add(dto);
         }
         return postsDTO;
     }
 
-    public List<PostsResponse> getTop8Post() {
+    public List<PostsResponse> getTop8PostByCampus(String campus) {
         List<PostsResponse> postsDTO = new ArrayList<>();
-        List<Post> posts = postRepository.findTop8ByIsCloseOrderByCreatedAtDesc(false);
+        List<Post> posts = postRepository.findTop8ByIsCloseAndLocationStartingWithOrderByCreatedAtDesc(false, campus.equals("global") ? "G" : "M");
         for(Post post : posts){
             PostsResponse dto = new PostsResponse();
             dto.setPostId(post.getPostId());

@@ -28,7 +28,7 @@ public class PostApiController {
     @PostMapping
     public ResponseEntity<PostResponse> save(@RequestPart AddPostRequest request, @RequestPart(required = false) MultipartFile pic, Authentication authentication) {
         if (authentication == null) return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        Post post = postService.save(request, authentication.getName());
+        Post post = postService.save(request, authentication.getName(), pic);
         return ResponseEntity.ok().body(new PostResponse(post));
     }
 
@@ -55,8 +55,8 @@ public class PostApiController {
     }
 
     @GetMapping("/news")
-    public ResponseEntity<List<PostsResponse>> getTop8Post() throws Exception {
-        List<PostsResponse> posts = postService.getTop8Post();
+    public ResponseEntity<List<PostsResponse>> getTop8Post(@RequestParam(name = "campus", required = false) String campus) throws Exception {
+        List<PostsResponse> posts = postService.getTop8PostByCampus(campus);
         return ResponseEntity.ok(posts);
     }
 
