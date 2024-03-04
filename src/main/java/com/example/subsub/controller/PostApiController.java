@@ -40,10 +40,9 @@ public class PostApiController {
     }
 
     // 모두 조회 by userid
-    @GetMapping("/all")
-    public ResponseEntity<List<PostsResponse>> getAllPostByUserId(Authentication authentication) throws Exception {
-        if (authentication == null) return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        List<PostsResponse> posts = postService.getAllPostByUserId(authentication.getName());
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<PostsResponse>> get3PostByUser(@PathVariable String userId) throws Exception {
+        List<PostsResponse> posts = postService.get3PostByUser(userId);
         return ResponseEntity.ok(posts);
     }
 
@@ -72,8 +71,14 @@ public class PostApiController {
         return post;
     }
 
+    @PutMapping("/done/{id}/{lenderId}/{borrowerId}")
+    public ResponseEntity<PostResponse> doneAndCount(@PathVariable Integer id,@PathVariable String lenderId,@PathVariable String borrowerId) {
+        ResponseEntity<PostResponse> post = postService.doneAndCount(id, lenderId, borrowerId);
+        return post;
+    }
+
     @PutMapping("/done/{id}")
-    public ResponseEntity<PostResponse>  done(@PathVariable Integer id) {
+    public ResponseEntity<PostResponse> done(@PathVariable Integer id) {
         ResponseEntity<PostResponse> post = postService.done(id);
         return post;
     }

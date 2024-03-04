@@ -74,11 +74,11 @@ public class PostService {
     }
 
     // 모두 조회
-    public List<PostsResponse> getAllPostByUserId(String userId) {
+    public List<PostsResponse> get3PostByUser(String userId) {
         List<PostsResponse> postsDTO = new ArrayList<>();
 
-        User user = userRepository.findByUserId(userId).get();
-        List<Post> posts = postRepository.findAllByUser(user);
+        User user = userRepository.findById(userId).get();
+        List<Post> posts = postRepository.findTop3ByUserOrderByCreatedAtDesc(user);
 
         for(Post post : posts){
             PostsResponse dto = new PostsResponse();
@@ -122,7 +122,7 @@ public class PostService {
 
     public List<PostsResponse> getTop8PostByCampus(String campus) {
         List<PostsResponse> postsDTO = new ArrayList<>();
-        List<Post> posts = postRepository.findTop8ByIsCloseAndLocationStartingWithOrderByCreatedAtDesc(false, campus.equals("global") ? "G" : "M");
+        List<Post> posts = postRepository.findTop8ByLocationStartingWithOrderByCreatedAtDesc( campus.equals("global") ? "G" : "M");
         for(Post post : posts){
             PostsResponse dto = new PostsResponse();
             dto.setPostId(post.getPostId());
@@ -161,10 +161,27 @@ public class PostService {
         return ResponseEntity.ok(new PostResponse(updatedPost));
     }
 
+    public ResponseEntity<PostResponse> doneAndCount(Integer id, String lenderId, String borrowerId) {
+        Post post = postRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+        post.setIsClose(true);
+        Post donePost = postRepository.save(post);
+
+        User borrower = userRepository.findById(borrowerId).get();
+        borrower.setBorrowCount(borrower.getBorrowCount()+1);
+        userRepository.save(borrower);
+
+        User lender = userRepository.findById(lenderId).get();
+        borrower.setLendCount(lender.getLendCount()+1);
+        userRepository.save(lender);
+
+        return ResponseEntity.ok(new PostResponse(donePost));
+    }
+
     public ResponseEntity<PostResponse> done(Integer id) {
         Post post = postRepository.findById(id).orElseThrow(IllegalArgumentException::new);
         post.setIsClose(true);
         Post donePost = postRepository.save(post);
+
         return ResponseEntity.ok(new PostResponse(donePost));
     }
 }

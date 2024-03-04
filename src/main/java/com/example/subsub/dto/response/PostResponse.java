@@ -45,7 +45,6 @@ public class PostResponse {
         returnAt = post.getReturnAt();
         content = post.getContent();
         isClose = post.getIsClose();
-//        comments = post.getComments();
         nickname = post.getUser().getNickName();
         userId = post.getUser().getId();
         userImgPath = post.getUser().getImgPath();

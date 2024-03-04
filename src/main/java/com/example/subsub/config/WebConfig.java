@@ -22,14 +22,14 @@ public class WebConfig implements WebMvcConfigurer {
                 .maxAge(3600);
     }
 
-    @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry){
-        WebMvcConfigurer.super.addResourceHandlers(registry);
-        registry.addResourceHandler("/upload/**")
-                .addResourceLocations("file:"+ FilePath.IMAGEPATH)
-                .setCachePeriod(60*10*6)
-                .resourceChain(true)
-                .addResolver(new PathResourceResolver());
-
-    }
+//    @Override
+//    public void addResourceHandlers(ResourceHandlerRegistry registry){
+//        WebMvcConfigurer.super.addResourceHandlers(registry);
+//        registry.addResourceHandler("/upload/**")
+//                .addResourceLocations("file:"+ FilePath.IMAGEPATH)
+//                .setCachePeriod(60*10*6)
+//                .resourceChain(true)
+//                .addResolver(new PathResourceResolver());
+//
+//    }
 }
