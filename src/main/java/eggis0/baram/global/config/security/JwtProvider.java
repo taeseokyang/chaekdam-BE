@@ -1,6 +1,6 @@
 package eggis0.baram.global.config.security;
 
-import eggis0.baram.domain2.user.domain.Role;
+import eggis0.baram.domain.user.domain.Role;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;

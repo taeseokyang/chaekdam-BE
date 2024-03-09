@@ -1,13 +1,13 @@
 package eggis0.baram.global.config.socket;
 
-import eggis0.baram.domain2.message.domain.MessageType;
-import eggis0.baram.domain2.user.domain.UserType;
-import eggis0.baram.domain2.chat.dto.ChatDTO;
-import eggis0.baram.domain2.chat.repository.ChatRoomRepository;
-import eggis0.baram.domain2.chat.application.ChatService;
-import eggis0.baram.domain2.message.application.MessageService;
+import eggis0.baram.domain.message.domain.MessageType;
+import eggis0.baram.domain.user.domain.UserType;
+import eggis0.baram.domain.chat.dto.ChatDTO;
+import eggis0.baram.domain.chat.repository.ChatRoomRepository;
+import eggis0.baram.domain.chat.application.ChatService;
+import eggis0.baram.domain.message.application.MessageService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import eggis0.baram.domain2.chat.domain.ChatRoom;
+import eggis0.baram.domain.chat.domain.ChatRoom;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
