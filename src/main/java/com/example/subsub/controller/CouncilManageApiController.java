@@ -47,4 +47,9 @@ public class CouncilManageApiController {
         ResponseEntity<CouncilResponse> council = councilService.update(id, request);
         return council;
     }
+
+    @PutMapping("/{id}/{isCouncilSelfManage}")
+    public void  changeManager(@PathVariable Integer id, @PathVariable Boolean isCouncilSelfManage) {
+        councilService.changeManager(id, isCouncilSelfManage);
+    }
 }

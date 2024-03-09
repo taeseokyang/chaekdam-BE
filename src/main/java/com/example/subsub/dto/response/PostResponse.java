@@ -31,6 +31,7 @@ public class PostResponse {
     private String userImgPath;
     private String postImgPath;
     private boolean isCertification;
+    private boolean isLenderWriteReview;
 
     @Builder
     public PostResponse(Post post){
@@ -45,6 +46,7 @@ public class PostResponse {
         returnAt = post.getReturnAt();
         content = post.getContent();
         isClose = post.getIsClose();
+        isLenderWriteReview = post.getIsLenderWriteReview();
         nickname = post.getUser().getNickName();
         userId = post.getUser().getId();
         userImgPath = post.getUser().getImgPath();

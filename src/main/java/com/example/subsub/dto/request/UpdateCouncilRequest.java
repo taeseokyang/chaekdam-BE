@@ -13,4 +13,5 @@ public class UpdateCouncilRequest {
     private String location;
     private String operatingHours;
     private String usageGuidelines;
+    private boolean isCouncilSelfManage;
 }

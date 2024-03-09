@@ -2,6 +2,7 @@ package com.example.subsub.service;
 
 import com.example.subsub.domain.Council;
 import com.example.subsub.domain.ItemType;
+import com.example.subsub.domain.Role;
 import com.example.subsub.domain.User;
 import com.example.subsub.dto.request.UserRequest;
 import com.example.subsub.dto.response.CouncilResponse;
@@ -33,23 +34,24 @@ public class CouncilService {
 
     // 생성
     public Council save(AddCouncilRequest request, MultipartFile pic) throws Exception {
-        Long councilId = councilRepository.countAllBy();
-        UserRequest userRequest = new UserRequest();
-        userRequest.setNickname(request.getName());
-        userRequest.setUserid("council"+councilId);
-        userRequest.setPassword("0000");
-        userService.register(userRequest, pic);
-        User user = userRepository.findByUserId("council"+councilId).get();
-
         Council council = Council.builder()
                 .name(request.getName())
-                .manager(user)
                 .college(request.getCollege())
                 .location(request.getLocation())
                 .operatingHours(request.getOperatingHours())
                 .usageGuidelines(request.getUsageGuidelines())
+                .isCouncilSelfManage(false)
                 .build();
-        return councilRepository.save(council);
+        Council savedCouncil = councilRepository.save(council);
+        UserRequest userRequest = new UserRequest();
+        userRequest.setNickname(request.getName());
+        userRequest.setUserid("council"+savedCouncil.getCouncilId());
+        userRequest.setPassword("0000");
+        userRequest.setRole(Role.MANAGER);
+        userService.register(userRequest, pic);
+        User user = userRepository.findByUserId("council"+savedCouncil.getCouncilId()).get();
+        savedCouncil.setManager(user);
+        return councilRepository.save(savedCouncil);
     }
 
     // 조회
@@ -113,5 +115,10 @@ public class CouncilService {
         council.setUsageGuidelines(request.getUsageGuidelines());
         Council updatedCouncil = councilRepository.save(council);
         return ResponseEntity.ok(new CouncilResponse(updatedCouncil));
+    }
+
+    public void changeManager(Integer id, Boolean isCouncilSelfManage) {
+        Council council = councilRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+        council.setIsCouncilSelfManage(isCouncilSelfManage);
     }
 }

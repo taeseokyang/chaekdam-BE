@@ -6,6 +6,7 @@ import com.example.subsub.dto.response.AnnoResponse;
 import com.example.subsub.service.AnnoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,7 +20,8 @@ public class AnnoApiController {
 
     // 생성
     @PostMapping
-    public ResponseEntity<AnnoResponse> save(@RequestBody AddAnnoRequest request) {
+    public ResponseEntity<AnnoResponse> save(@RequestBody AddAnnoRequest request, Authentication authentication) {
+        System.out.println(authentication.getAuthorities());
         Announcement anno = annoService.save(request);
         return ResponseEntity.ok().body(new AnnoResponse(anno));
     }

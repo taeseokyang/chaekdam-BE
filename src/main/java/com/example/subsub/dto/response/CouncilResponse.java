@@ -21,6 +21,7 @@ public class CouncilResponse {
     private String usageGuidelines;
     private String imgPath;
     private List<CouncilItem> items = new ArrayList<>();
+    private Boolean isCouncilSelfManage;
     @Builder
     public CouncilResponse(Council council, String imgPath){
         councilId = council.getCouncilId();
@@ -31,6 +32,7 @@ public class CouncilResponse {
         usageGuidelines = council.getUsageGuidelines();
         this.imgPath = imgPath;
         items = council.getItems();
+        isCouncilSelfManage = council.getIsCouncilSelfManage();
     }
 
     @Builder
@@ -42,5 +44,6 @@ public class CouncilResponse {
         operatingHours = council.getOperatingHours();
         usageGuidelines = council.getUsageGuidelines();
         items = council.getItems();
+        isCouncilSelfManage = council.getIsCouncilSelfManage();
     }
 }

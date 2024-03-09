@@ -6,10 +6,7 @@ import com.example.subsub.dto.request.AddReviewRequest;
 import com.example.subsub.dto.request.UpdateCouncilRequest;
 import com.example.subsub.dto.request.UserRequest;
 import com.example.subsub.dto.response.*;
-import com.example.subsub.repository.CouncilItemRepository;
-import com.example.subsub.repository.CouncilRepository;
-import com.example.subsub.repository.ReviewRepository;
-import com.example.subsub.repository.UserRepository;
+import com.example.subsub.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,11 +24,18 @@ import java.util.List;
 public class ReviewService {
 
     private final UserRepository userRepository;
+    private final PostRepository postRepository;
     private final ReviewRepository reviewRepository;
 
     // 생성
     public Review save(AddReviewRequest request) throws Exception {
         User recipient = userRepository.findById(request.getRecipientId()).get();
+
+        if (request.getWriterType() == UserType.LENDER){
+            Post post = postRepository.findByPostId(request.getPostId()).get();
+            post.setIsLenderWriteReview(true);
+            postRepository.save(post);
+        }
 
         LocalDateTime createdAt = LocalDateTime.now();
         Review review = Review.builder()

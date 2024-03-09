@@ -47,9 +47,15 @@ public class PostApiController {
     }
 
     // 모두 조회 by location
-    @GetMapping("/all/{location}")
+    @GetMapping("/all/location/{location}")
     public ResponseEntity<List<PostsResponse>> getAllPostByLocation(@PathVariable String location) throws Exception {
         List<PostsResponse> posts = postService.getAllPostByLocation(location);
+        return ResponseEntity.ok(posts);
+    }
+
+    @GetMapping("/all/campus/{campus}")
+    public ResponseEntity<List<PostsResponse>> getAllPostByCampus(@PathVariable String campus) throws Exception {
+        List<PostsResponse> posts = postService.getAllPostByCampus(campus);
         return ResponseEntity.ok(posts);
     }
 

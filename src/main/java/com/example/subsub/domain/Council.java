@@ -40,6 +40,9 @@ public class Council {
     @Column(nullable = false)
     private String usageGuidelines;
 
+    @Column(nullable = false)
+    private Boolean isCouncilSelfManage;
+
     @OneToMany(mappedBy = "council", fetch = FetchType.EAGER, orphanRemoval = true)
     private List<CouncilItem> items = new ArrayList<>();
 }

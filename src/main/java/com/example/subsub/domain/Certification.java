@@ -23,6 +23,12 @@ public class Certification {
     private User user;
 
     @Column(nullable = false)
+    private String name;
+
+    @Column(nullable = false)
+    private String studentIdNumber;
+
+    @Column(nullable = false)
     private LocalDateTime requestAt;
 
     @Column

@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -28,12 +29,9 @@ public class CertificationService {
 
     private final CertificationRepository certificationRepository;
 
-    public ResponseEntity<Certification> request(CertifiRequest request, MultipartFile pic) throws Exception {
+    public ResponseEntity<Certification> request(CertifiRequest request, MultipartFile pic, String userId) throws Exception {
         try {
-
-//            if (certificationRepository.existsUserByUserId(request.getUserid())){
-//                return new ResponseEntity<>(new RegisterResponse(false, "중복된 ID"), HttpStatus.CONFLICT);
-//            }
+            System.out.println("hello");
             String imageFileName = "default.png";
 
             if(pic!=null){
@@ -48,13 +46,16 @@ public class CertificationService {
             }else{
                 return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
             }
-            if (!userRepository.existsUserByUserId(request.getUserid())){
+            if (!userRepository.existsUserByUserId(userId)){
                 return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
             }
-            User user = userRepository.findByUserId(request.getUserid()).get();
+            LocalDateTime requestAt = LocalDateTime.now();
+            User user = userRepository.findByUserId(userId).get();
             Certification certification = Certification.builder()
                     .user(user)
-                    .requestAt(request.getRequestAt())
+                    .name(request.getName())
+                    .studentIdNumber(request.getStudentIdNumber())
+                    .requestAt(requestAt)
                     .imgPath(imageFileName)
                     .build();
 
@@ -69,5 +70,10 @@ public class CertificationService {
     public ResponseEntity<List<Certification>> requests() throws Exception {
         List<Certification> certifications = certificationRepository.findAllByOrderByUserIsCertification();
         return new ResponseEntity<>(certifications, HttpStatus.OK);
+    }
+
+    public ResponseEntity<Certification> getRequest(Long id) throws Exception {
+        Certification certification = certificationRepository.findById(id).get();
+        return new ResponseEntity<>(certification, HttpStatus.OK);
     }
 }

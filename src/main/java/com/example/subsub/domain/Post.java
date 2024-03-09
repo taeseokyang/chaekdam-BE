@@ -49,6 +49,9 @@ public class Post {
     @Column(nullable = false)
     private Boolean isClose;
 
+    @Column(nullable = false)
+    private Boolean isLenderWriteReview;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id")
     @JsonIgnore

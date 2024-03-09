@@ -6,8 +6,8 @@ import java.util.List;
 
 public enum Role {
 
-    ADMIN("ROLE_ADMIN,ROLE_USER"),
-//    MANAGER("ROLE_ADMIN,ROLE_MANAGER,ROLE_USER"),
+    ADMIN("ROLE_ADMIN,ROLE_MANAGER,ROLE_USER"),
+    MANAGER("ROLE_MANAGER,ROLE_USER"),
     USER("ROLE_USER");
 
     private final String role;

@@ -72,9 +72,8 @@ public class UserService {
                     .imgPath(imageFileName)
                     .borrowCount(0)
                     .lendCount(0)
+                    .roles(Role.valueOf("USER"))
                     .build();
-
-            user.setRoles(Role.valueOf("USER"));
             userRepository.save(user);
             UserResponse signResponse= UserResponse.builder()
                     .id(user.getId())
@@ -149,8 +148,8 @@ public class UserService {
                     .imgPath(imageFileName)
                     .borrowCount(0)
                     .lendCount(0)
+                    .roles(Role.MANAGER)
                     .build();
-            user.setRoles(Role.valueOf("USER"));
             userRepository.save(user);
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -172,10 +171,25 @@ public class UserService {
 
     }
 
-    public ResponseEntity<UserResponse> updateNickname(String userId, UpdateUserRequest request) {
+    public ResponseEntity<UserResponse> updateNicknameAndPhoto(String userId, MultipartFile pic, UpdateUserRequest request) {
         User user = userRepository.findByUserId(userId).orElseThrow(IllegalArgumentException::new);
+
+
+        if(pic!=null){
+            String imageFileName;
+            UUID uuid = UUID.randomUUID();
+            imageFileName = uuid+"_"+pic.getOriginalFilename();
+            Path imagePath = Paths.get(FilePath.IMAGEPATH+imageFileName);
+            try{
+                Files.write(imagePath,pic.getBytes());
+            }catch (Exception e){
+
+            }
+            user.setImgPath(imageFileName);
+        }
         user.setNickName(request.getNickname());
         User updatedUser = userRepository.save(user);
+
         return ResponseEntity.ok(new UserResponse(updatedUser, "변경 성공"));
     }
 

@@ -41,14 +41,23 @@ public class JwtProvider {
 
     // 토큰 생성
     public String createToken(String userid, Role roles) {
-        Claims claims = Jwts.claims().setSubject(userid);
-        claims.put("roles", roles);
+//        Claims claims = Jwts.claims().setSubject(userid);
+//        claims.put("roles", roles);
+//        Date now = new Date();
+//        return Jwts.builder()
+//                .setClaims(claims)
+//                .setIssuedAt(now)
+//                .setExpiration(new Date(now.getTime() + exp))
+//                .signWith(secretKey, SignatureAlgorithm.HS256)
+//                .compact();
+
         Date now = new Date();
+        Date expireDate = new Date(now.getTime() + exp);
         return Jwts.builder()
-                .setClaims(claims)
-                .setIssuedAt(now)
-                .setExpiration(new Date(now.getTime() + exp))
-                .signWith(secretKey, SignatureAlgorithm.HS256)
+                .setSubject(userid)
+                .claim("roles", roles.value())
+                .setExpiration(expireDate)
+                .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
     }
 

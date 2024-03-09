@@ -19,6 +19,7 @@ public class CouncilsResponse {
     private String imgPath;
     private Integer providedItemCount;
     private Integer rentalItemCount;
+    private Boolean isCouncilSelfManage;
     @Builder
     public CouncilsResponse(Council council, Integer pic, Integer ric, String imgPath){
         councilId = council.getCouncilId();
@@ -27,5 +28,6 @@ public class CouncilsResponse {
         providedItemCount = pic;
         rentalItemCount = ric;
         this.imgPath = imgPath;
+        isCouncilSelfManage = council.getIsCouncilSelfManage();
     }
 }

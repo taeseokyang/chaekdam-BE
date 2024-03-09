@@ -1,5 +1,6 @@
 package com.example.subsub.dto.request;
 
+import com.example.subsub.domain.Role;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,4 +14,6 @@ public class UserRequest {
     private String nickname;
 
     private String password;
+
+    private Role role;
 }

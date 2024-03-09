@@ -1,6 +1,7 @@
 package com.example.subsub.service;
 
 import com.example.subsub.domain.User;
+import com.example.subsub.domain.VisitCount;
 import com.example.subsub.repository.PostRepository;
 import com.example.subsub.repository.UserRepository;
 import com.example.subsub.domain.Post;
@@ -8,6 +9,7 @@ import com.example.subsub.dto.request.AddPostRequest;
 import com.example.subsub.dto.request.UpdatePostRequest;
 import com.example.subsub.dto.response.PostResponse;
 import com.example.subsub.dto.response.PostsResponse;
+import com.example.subsub.repository.VisitCountRepository;
 import com.example.subsub.utils.FilePath;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +34,7 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final UserRepository userRepository;
+    private final VisitCountRepository visitCountRepository;
 
     // 생성
     public Post save(AddPostRequest request, String userName, MultipartFile pic) {
@@ -60,6 +64,7 @@ public class PostService {
                 .needAt(request.getNeedAt())
                 .returnAt(request.getReturnAt())
                 .isClose(false)
+                .isLenderWriteReview(false)
                 .user(user)
                 .imgPath(imageFileName)
                 .build();
@@ -120,7 +125,27 @@ public class PostService {
         return postsDTO;
     }
 
+    public List<PostsResponse> getAllPostByCampus(String campus) {
+        List<PostsResponse> postsDTO = new ArrayList<>();
+        List<Post> posts = postRepository.findAllByLocationStartingWithOrderByCreatedAtDesc( campus.equals("global") ? "G" : "M");
+        for(Post post : posts){
+            PostsResponse dto = new PostsResponse();
+            dto.setPostId(post.getPostId());
+            dto.setUserId(post.getUser().getUserId());
+            dto.setTitle(post.getTitle());
+            dto.setLocation(post.getLocation());
+            dto.setLocationDetail(post.getLocationDetail());
+            dto.setRentalFee(post.getRentalFee());
+            dto.setSecurity(post.getSecurity());
+            dto.setCreatedAt(post.getCreatedAt());
+            dto.setClose(post.getIsClose());
+            postsDTO.add(dto);
+        }
+        return postsDTO;
+    }
+
     public List<PostsResponse> getTop8PostByCampus(String campus) {
+
         List<PostsResponse> postsDTO = new ArrayList<>();
         List<Post> posts = postRepository.findTop8ByLocationStartingWithOrderByCreatedAtDesc( campus.equals("global") ? "G" : "M");
         for(Post post : posts){
@@ -135,6 +160,19 @@ public class PostService {
             dto.setCreatedAt(post.getCreatedAt());
             dto.setClose(post.getIsClose());
             postsDTO.add(dto);
+        }
+
+        LocalDate today = LocalDate.now();
+        if (visitCountRepository.existsByDay(today)){
+            VisitCount visitCount = visitCountRepository.findByDay(today);
+            visitCount.setCount(visitCount.getCount()+1);
+            visitCountRepository.save(visitCount);
+        }else{
+            VisitCount visitCount = VisitCount.builder()
+                    .count(1)
+                    .day(today)
+                    .build();
+            visitCountRepository.save(visitCount);
         }
         return postsDTO;
     }

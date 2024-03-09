@@ -23,10 +23,10 @@ public class UserController {
         return userService.login(request);
     }
 
-    @PostMapping(value = "/register")
-    public ResponseEntity<RegisterResponse> signup(@RequestPart UserRequest request, @RequestPart(required = false) MultipartFile pic) throws Exception {
-        return userService.register(request, pic);
-    }
+//    @PostMapping(value = "/register")
+//    public ResponseEntity<RegisterResponse> signup(@RequestPart UserRequest request, @RequestPart(required = false) MultipartFile pic) throws Exception {
+//        return userService.register(request, pic);
+//    }
 
     @GetMapping("/account")
     public ResponseEntity<UserResponse> getUser(@RequestParam String id) throws Exception {
@@ -42,10 +42,10 @@ public class UserController {
 //    public ResponseEntity<UserResponse>  updateCertification(@RequestParam String id,@RequestBody UpdateUserCertifiRequest request) {
 //        return userService.updateCertification(id, request);
 //    }
-    @PutMapping("/user/update")
-    public ResponseEntity<UserResponse>  updateNickname(@RequestBody UpdateUserRequest request, Authentication authentication) {
+    @PutMapping("/account/update")
+    public ResponseEntity<UserResponse>  updateNicknameAndPhoto(@RequestPart UpdateUserRequest request, @RequestPart(required = false) MultipartFile pic, Authentication authentication) {
         if (authentication == null) return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        return userService.updateNickname(authentication.getName(), request);
+        return userService.updateNicknameAndPhoto(authentication.getName(), pic, request);
     }
 
 

@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor
 public class AddReviewRequest {
+    private Integer postId;
     private UserType writerType;
     private String recipientId;
     private RateType rate;

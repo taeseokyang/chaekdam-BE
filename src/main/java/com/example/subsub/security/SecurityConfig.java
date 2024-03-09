@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -48,8 +49,15 @@ public class SecurityConfig{
                         authorizeRequests
                                 .requestMatchers("/login").permitAll()
                                 .requestMatchers("/register").permitAll()
+                                .requestMatchers("/oauth/**").permitAll()
 //                                .requestMatchers("/admin/**").hasRole("ADMIN")
                                 .requestMatchers("/user/**").hasRole("USER")
+                                .requestMatchers("/manage/**").hasRole("MANAGER")
+
+                                .requestMatchers(HttpMethod.POST,"/anno/**").hasRole("ADMIN")
+//                                .requestMatchers(HttpMethod.POST,"/manage/council").hasRole("ADMIN")
+//                                .requestMatchers(HttpMethod.PUT,"/certifi/approval").hasRole("ADMIN")
+//                                .requestMatchers(HttpMethod.GET,"/certifi/requests/**").hasRole("ADMIN")
                                 .anyRequest().permitAll()
                 )
                 .addFilterBefore(new JwtAuthenticationFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class)
