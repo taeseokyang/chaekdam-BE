@@ -1,19 +1,19 @@
 package eggis0.baram.domain.chat.presentation;
 
-import eggis0.baram.domain.chat.dto.req.AddChatRoomRequest;
 import eggis0.baram.domain.chat.application.ChatService;
+import eggis0.baram.domain.chat.dto.req.AddChatRoomRequest;
 import eggis0.baram.domain.chat.dto.res.ChatRoomResponse;
 import eggis0.baram.domain.chat.dto.res.ChatRoomsResponse;
-import eggis0.baram.domain.message.domain.Message;
-import eggis0.baram.domain.message.application.MessageService;
+import eggis0.baram.global.config.dto.ResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static eggis0.baram.domain.chat.presentation.constant.ResponseMessage.SUCCESS_CREATE;
+import static org.springframework.http.HttpStatus.OK;
 
 @RestController
 @Slf4j
@@ -22,27 +22,16 @@ import java.util.List;
 public class ChatController {
 
     private final ChatService chatService;
-    private final MessageService messageService;
 
     @PostMapping
-    public ChatRoomResponse createRoom(@RequestBody AddChatRoomRequest request){
-        return chatService.createRoom(request);
+    public ResponseDto<ChatRoomResponse> save(@RequestBody AddChatRoomRequest request) {
+        ChatRoomResponse response = chatService.save(request);
+        return ResponseDto.of(OK.value(), SUCCESS_CREATE.getMessage(), response);
     }
-
-    @GetMapping("/message/{roomId}")
-    public ResponseEntity<List<Message>> getAllMessageByRoom(@PathVariable String roomId, Authentication authentication) throws Exception {
-        if (authentication == null) return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        List<Message> messages = messageService.getAllMessageByRoomId(roomId, authentication.getName());
-        return ResponseEntity.ok(messages);
-    }
-//    @GetMapping
-//    public List<ChatRoom> findAllRooms(){
-//        return chatService.findAllRoom();
-//    }
 
     @GetMapping("/user")
-    public ResponseEntity<List<List<ChatRoomsResponse>> > findAllByUser(Authentication authentication){
-        if (authentication == null) return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        return ResponseEntity.ok(chatService.findAllByUser(authentication.getName()));
+    public ResponseDto<List<List<ChatRoomsResponse>>> getAllByUser(Authentication authentication) {
+        List<List<ChatRoomsResponse>> responses = chatService.getAllByUser(authentication.getName());
+        return ResponseDto.of(OK.value(), SUCCESS_CREATE.getMessage(), responses);
     }
 }

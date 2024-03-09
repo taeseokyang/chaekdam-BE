@@ -31,14 +31,14 @@ public class ChatRoom {
     @JsonIgnore
     private User borrower;
 
-    @Column(nullable = true)
+    @Column
     private Long borrowerSessionId;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JsonIgnore
     private User lender;
 
-    @Column(nullable = true)
+    @Column
     private Long lenderSessionId;
 
     @Column(nullable = false)
