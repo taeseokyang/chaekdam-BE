@@ -1,38 +1,38 @@
 package eggis0.baram.domain.council.presentation;
 
+import eggis0.baram.domain.council.application.CouncilService;
 import eggis0.baram.domain.council.dto.res.CouncilResponse;
-import eggis0.baram.domain.council.domain.CouncilService;
 import eggis0.baram.domain.council.dto.res.CouncilsResponse;
-import eggis0.baram.domain.council.domain.Council;
+import eggis0.baram.global.config.dto.ResponseDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static eggis0.baram.domain.council.presentation.constant.ResponseMessage.SUCCESS_READ;
+import static org.springframework.http.HttpStatus.OK;
+
 @RestController
-@RequestMapping("/council")
+@RequestMapping("/council") // councils
 @RequiredArgsConstructor
 public class CouncilApiController {
 
     private final CouncilService councilService;
 
-    // 조회
     @GetMapping("/{id}")
-    public ResponseEntity<CouncilResponse> findById(@PathVariable Integer id) {
-        Council council = councilService.getCouncil(id);
-        return ResponseEntity.ok().body(new CouncilResponse(council, council.getManager().getImgPath()));
+    public ResponseDto<CouncilResponse> get(@PathVariable Integer id) {
+        CouncilResponse response = councilService.get(id);
+        return ResponseDto.of(OK.value(), SUCCESS_READ.getMessage(), response);
     }
 
-    @GetMapping("/all")
-    public ResponseEntity<List<CouncilsResponse>> getCouncils(@RequestParam(name = "campus", required = false) String campus) throws Exception {
-        if (campus == null){
-            List<CouncilsResponse> councils = councilService.getAllCouncil();
-            return ResponseEntity.ok(councils);
-        }else{
-            List<CouncilsResponse> councils = councilService.getCouncilsByCampus(campus);
-            return ResponseEntity.ok(councils);
+    @GetMapping("/all") //
+    public ResponseDto<List<CouncilsResponse>> getAll(@RequestParam(name = "campus", required = false) String campus) {
+        if (campus == null) {
+            List<CouncilsResponse> responses = councilService.getAll();
+            return ResponseDto.of(OK.value(), SUCCESS_READ.getMessage(), responses);
         }
+        List<CouncilsResponse> responses = councilService.getAllByCampus(campus);
+        return ResponseDto.of(OK.value(), SUCCESS_READ.getMessage(), responses);
     }
 
 }

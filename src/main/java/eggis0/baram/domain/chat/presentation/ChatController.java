@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 import static eggis0.baram.domain.chat.presentation.constant.ResponseMessage.SUCCESS_CREATE;
+import static eggis0.baram.domain.chat.presentation.constant.ResponseMessage.SUCCESS_READ;
 import static org.springframework.http.HttpStatus.OK;
 
 @RestController
@@ -32,6 +33,6 @@ public class ChatController {
     @GetMapping("/user")
     public ResponseDto<List<List<ChatRoomsResponse>>> getAllByUser(Authentication authentication) {
         List<List<ChatRoomsResponse>> responses = chatService.getAllByUser(authentication.getName());
-        return ResponseDto.of(OK.value(), SUCCESS_CREATE.getMessage(), responses);
+        return ResponseDto.of(OK.value(), SUCCESS_READ.getMessage(), responses);
     }
 }
