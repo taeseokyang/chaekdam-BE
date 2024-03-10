@@ -1,4 +1,5 @@
 package eggis0.baram.domain.user.domain;
+
 import eggis0.baram.domain.post.domain.Post;
 import jakarta.persistence.*;
 import lombok.*;
@@ -30,10 +31,7 @@ public class User {
     @Column
     private String passWord;
 
-//    @OneToMany(mappedBy = "user",fetch = FetchType.EAGER)
-//    private List<Comment> comments = new ArrayList<>();
-
-    @OneToMany(mappedBy = "user",fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private List<Post> posts = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)

@@ -20,12 +20,11 @@ public class UserResponse {
     private Role roles;
     private String token;
     private boolean isCertification;
-    private String message;
     private Integer borrowCount;
     private Integer lendCount;
 
 
-    public UserResponse(User user, String message) {
+    public UserResponse(User user) {
         this.id = user.getId();
         this.userId = user.getUserId();
         this.nickname = user.getNickName();
@@ -34,6 +33,5 @@ public class UserResponse {
         this.isCertification = user.isCertification();
         this.borrowCount = user.getBorrowCount();
         this.lendCount = user.getLendCount();
-        this.message = message;
     }
 }

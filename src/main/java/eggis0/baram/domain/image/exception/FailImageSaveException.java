@@ -1,4 +1,4 @@
-package eggis0.baram.domain.certification.exception;
+package eggis0.baram.domain.image.exception;
 
 import eggis0.baram.global.config.exception.ApplicationException;
 

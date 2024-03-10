@@ -1,15 +1,17 @@
 package eggis0.baram.domain.user.presentation;
 
-import eggis0.baram.domain.user.dto.req.UserRequest;
-import eggis0.baram.domain.user.dto.res.UserResponse;
 import eggis0.baram.domain.user.application.UserService;
 import eggis0.baram.domain.user.dto.req.UpdateUserRequest;
+import eggis0.baram.domain.user.dto.req.UserRequest;
+import eggis0.baram.domain.user.dto.res.UserResponse;
+import eggis0.baram.global.config.dto.ResponseDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import static eggis0.baram.domain.user.presentation.constant.ResponseMessage.*;
+import static org.springframework.http.HttpStatus.OK;
 
 @RestController
 @RequiredArgsConstructor
@@ -17,33 +19,26 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping(value = "/login")
-    public ResponseEntity<UserResponse> signin(@RequestBody UserRequest request) throws Exception {
-        return userService.login(request);
+    public ResponseDto<UserResponse> signin(@RequestBody UserRequest request) {
+        UserResponse response = userService.login(request);
+        return ResponseDto.of(OK.value(), SUCCESS_LOGIN.getMessage(), response);
     }
-
-//    @PostMapping(value = "/register")
-//    public ResponseEntity<RegisterResponse> signup(@RequestPart UserRequest request, @RequestPart(required = false) MultipartFile pic) throws Exception {
-//        return userService.register(request, pic);
-//    }
 
     @GetMapping("/account")
-    public ResponseEntity<UserResponse> getUser(@RequestParam String id) throws Exception {
-        return userService.getUser(id);
+    public ResponseDto<UserResponse> get(@RequestParam String id) throws Exception {
+        UserResponse response = userService.get(id);
+        return ResponseDto.of(OK.value(), SUCCESS_READ.getMessage(), response);
     }
 
-    @GetMapping("/admin")
-    public ResponseEntity<UserResponse> getUserForAdmin(@RequestParam String id) throws Exception {
-        return userService.getUser(id);
-    }
-
-//    @PutMapping("/admin/user/certification")
-//    public ResponseEntity<UserResponse>  updateCertification(@RequestParam String id,@RequestBody UpdateUserCertifiRequest request) {
-//        return userService.updateCertification(id, request);
+//    @GetMapping("/admin")
+//    public ResponseDto<UserResponse> getUserForAdmin(@RequestParam String id) {
+//        return userService.getUser(id);
 //    }
+
     @PutMapping("/account/update")
-    public ResponseEntity<UserResponse>  updateNicknameAndPhoto(@RequestPart UpdateUserRequest request, @RequestPart(required = false) MultipartFile pic, Authentication authentication) {
-        if (authentication == null) return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        return userService.updateNicknameAndPhoto(authentication.getName(), pic, request);
+    public ResponseDto<UserResponse> updateNicknameAndPhoto(@RequestPart UpdateUserRequest request, @RequestPart(required = false) MultipartFile pic, Authentication authentication) {
+        UserResponse response = userService.updateNicknameAndPhoto(authentication.getName(), pic, request);
+        return ResponseDto.of(OK.value(), SUCCESS_UPDATE.getMessage(), response);
     }
 
 

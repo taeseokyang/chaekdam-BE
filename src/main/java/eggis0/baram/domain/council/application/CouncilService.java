@@ -34,6 +34,9 @@ public class CouncilService {
 
     private static final String INIT_COUNCIL_ID = "council";
     private static final String INIT_COUNCIL_PW = "0000";
+    private static final String GLOBAL = "global";
+    private static final String PREFIX_GLOBAL = "G";
+    private static final String PREFIX_MEDICAL = "M";
 
     public CouncilResponse save(AddCouncilRequest request, MultipartFile pic) throws Exception {
         Council council = Council.builder()
@@ -92,7 +95,7 @@ public class CouncilService {
     // 모두 조회
     public List<CouncilsResponse> getAllByCampus(String campus) {
         List<CouncilsResponse> councilsDTO = new ArrayList<>();
-        List<Council> councils = councilRepository.findAllByCollegeStartingWithOrderByCollege(campus.equals("global") ? "G" : "M");
+        List<Council> councils = councilRepository.findAllByCollegeStartingWithOrderByCollege(campus.equals(GLOBAL) ? PREFIX_GLOBAL : PREFIX_MEDICAL);
         for (Council council : councils) {
             CouncilsResponse dto = new CouncilsResponse();
             dto.setCouncilId(council.getCouncilId());

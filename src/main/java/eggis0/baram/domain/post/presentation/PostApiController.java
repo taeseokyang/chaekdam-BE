@@ -1,19 +1,20 @@
 package eggis0.baram.domain.post.presentation;
 
-import eggis0.baram.domain.post.dto.res.PostResponse;
 import eggis0.baram.domain.post.application.PostService;
-import eggis0.baram.domain.post.dto.res.PostsResponse;
-import eggis0.baram.domain.post.dto.req.UpdatePostRequest;
-import eggis0.baram.domain.post.domain.Post;
 import eggis0.baram.domain.post.dto.req.AddPostRequest;
+import eggis0.baram.domain.post.dto.req.UpdatePostRequest;
+import eggis0.baram.domain.post.dto.res.PostResponse;
+import eggis0.baram.domain.post.dto.res.PostsResponse;
+import eggis0.baram.global.config.dto.ResponseDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+
+import static eggis0.baram.domain.post.presentation.constant.ResponseMessage.*;
+import static org.springframework.http.HttpStatus.OK;
 
 @RestController
 @RequestMapping("/post")
@@ -22,68 +23,63 @@ public class PostApiController {
 
     private final PostService postService;
 
-    // 생성
     @PostMapping
-    public ResponseEntity<PostResponse> save(@RequestPart AddPostRequest request, @RequestPart(required = false) MultipartFile pic, Authentication authentication) {
-        if (authentication == null) return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        Post post = postService.save(request, authentication.getName(), pic);
-        return ResponseEntity.ok().body(new PostResponse(post));
+    public ResponseDto<PostResponse> save(@RequestPart AddPostRequest request, @RequestPart(required = false) MultipartFile pic, Authentication authentication) {
+        PostResponse response = postService.save(request, authentication.getName(), pic);
+        return ResponseDto.of(OK.value(), SUCCESS_CREATE.getMessage(), response);
     }
 
-    // 조회
     @GetMapping("/{id}")
-    public ResponseEntity<PostResponse> findById(@PathVariable Integer id) {
-//        Post post = postService.getPost(id);
-        return postService.getPost(id);
+    public ResponseDto<PostResponse> get(@PathVariable Integer id) {
+        PostResponse response = postService.get(id);
+        return ResponseDto.of(OK.value(), SUCCESS_READ.getMessage(), response);
     }
 
-    // 모두 조회 by userid
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<PostsResponse>> get3PostByUser(@PathVariable String userId) throws Exception {
-        List<PostsResponse> posts = postService.get3PostByUser(userId);
-        return ResponseEntity.ok(posts);
+    public ResponseDto<List<PostsResponse>> get3ByUser(@PathVariable String userId) {
+        List<PostsResponse> responses = postService.get3ByUser(userId);
+        return ResponseDto.of(OK.value(), SUCCESS_READ.getMessage(), responses);
     }
 
-    // 모두 조회 by location
     @GetMapping("/all/location/{location}")
-    public ResponseEntity<List<PostsResponse>> getAllPostByLocation(@PathVariable String location) throws Exception {
-        List<PostsResponse> posts = postService.getAllPostByLocation(location);
-        return ResponseEntity.ok(posts);
+    public ResponseDto<List<PostsResponse>> getAllByLocation(@PathVariable String location) {
+        List<PostsResponse> responses = postService.getAllByLocation(location);
+        return ResponseDto.of(OK.value(), SUCCESS_READ.getMessage(), responses);
     }
 
     @GetMapping("/all/campus/{campus}")
-    public ResponseEntity<List<PostsResponse>> getAllPostByCampus(@PathVariable String campus) throws Exception {
-        List<PostsResponse> posts = postService.getAllPostByCampus(campus);
-        return ResponseEntity.ok(posts);
+    public ResponseDto<List<PostsResponse>> getAllPostByCampus(@PathVariable String campus) {
+        List<PostsResponse> responses = postService.getAllPostByCampus(campus);
+        return ResponseDto.of(OK.value(), SUCCESS_READ.getMessage(), responses);
     }
 
     @GetMapping("/news")
-    public ResponseEntity<List<PostsResponse>> getTop8Post(@RequestParam(name = "campus", required = false) String campus) throws Exception {
-        List<PostsResponse> posts = postService.getTop8PostByCampus(campus);
-        return ResponseEntity.ok(posts);
+    public ResponseDto<List<PostsResponse>> get8(@RequestParam(name = "campus", required = false) String campus) {
+        List<PostsResponse> responses = postService.get8(campus);
+        return ResponseDto.of(OK.value(), SUCCESS_READ.getMessage(), responses);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deletePost(@PathVariable Integer id) {
-        ResponseEntity<String> result = postService.deletePost(id);
-        return result;
+    public ResponseDto delete(@PathVariable Integer id) {
+        postService.delete(id);
+        return ResponseDto.of(OK.value(), SUCCESS_DELETE.getMessage());
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<PostResponse>  updatePost(@PathVariable Integer id, @RequestBody UpdatePostRequest request) {
-        ResponseEntity<PostResponse> post = postService.update(id, request);
-        return post;
+    public ResponseDto update(@PathVariable Integer id, @RequestBody UpdatePostRequest request) {
+        postService.update(id, request);
+        return ResponseDto.of(OK.value(), SUCCESS_UPDATE.getMessage());
     }
 
     @PutMapping("/done/{id}/{lenderId}/{borrowerId}")
-    public ResponseEntity<PostResponse> doneAndCount(@PathVariable Integer id,@PathVariable String lenderId,@PathVariable String borrowerId) {
-        ResponseEntity<PostResponse> post = postService.doneAndCount(id, lenderId, borrowerId);
-        return post;
+    public ResponseDto<PostResponse> doneAndCount(@PathVariable Integer id, @PathVariable String lenderId, @PathVariable String borrowerId) {
+        postService.doneAndCount(id, lenderId, borrowerId);
+        return ResponseDto.of(OK.value(), SUCCESS_UPDATE.getMessage());
     }
 
     @PutMapping("/done/{id}")
-    public ResponseEntity<PostResponse> done(@PathVariable Integer id) {
-        ResponseEntity<PostResponse> post = postService.done(id);
-        return post;
+    public ResponseDto<PostResponse> done(@PathVariable Integer id) {
+        postService.done(id);
+        return ResponseDto.of(OK.value(), SUCCESS_UPDATE.getMessage());
     }
 }

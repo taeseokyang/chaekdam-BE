@@ -1,13 +1,14 @@
 package eggis0.baram.global.config.socket;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import eggis0.baram.domain.chat.application.ChatService;
+import eggis0.baram.domain.chat.domain.ChatRoom;
+import eggis0.baram.domain.chat.dto.ChatDTO;
+import eggis0.baram.domain.chat.exception.FailSendMessageException;
+import eggis0.baram.domain.chat.repository.ChatRoomRepository;
+import eggis0.baram.domain.message.application.MessageService;
 import eggis0.baram.domain.message.domain.MessageType;
 import eggis0.baram.domain.user.domain.UserType;
-import eggis0.baram.domain.chat.dto.ChatDTO;
-import eggis0.baram.domain.chat.repository.ChatRoomRepository;
-import eggis0.baram.domain.chat.application.ChatService;
-import eggis0.baram.domain.message.application.MessageService;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import eggis0.baram.domain.chat.domain.ChatRoom;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -39,54 +40,46 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
         log.info("payload {}", payload);
 
         ChatDTO chatMessage = mapper.readValue(payload, ChatDTO.class);
-//        log.info("session {}", chatMessage.toString());
         log.info("{} 연결됨", session.getId());
-        handleAction(session, chatMessage,chatService);
+        handleAction(session, chatMessage, chatService);
     }
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-        // TODO Auto-generated method stub
         Long removedSessionIdx = sessionToIdMap.remove(session);
         idToSessionMap.remove(removedSessionIdx);
         log.info("{} 연결 끊김", session.getId());
         log.info("세션 메모리 크기 {}", sessionToIdMap.size());
     }
 
-    public void handleAction(WebSocketSession session, ChatDTO message,ChatService chatService) {
+    public void handleAction(WebSocketSession session, ChatDTO message, ChatService chatService) {
         ChatRoom chatRoom = chatRoomRepository.findByRoomId(message.getRoomId());
 
         if (message.getType().equals(MessageType.ENTER)) {
             session_Idx += 1;
 
-            sessionToIdMap.put(session,session_Idx);
-            idToSessionMap.put(session_Idx,session);
+            sessionToIdMap.put(session, session_Idx);
+            idToSessionMap.put(session_Idx, session);
 
             if (message.getUserType().equals(UserType.BORROWER))
                 chatRoom.setBorrowerSessionId(session_Idx);
-            else if(message.getUserType().equals(UserType.LENDER))
+            else if (message.getUserType().equals(UserType.LENDER))
                 chatRoom.setLenderSessionId(session_Idx);
 
             chatRoomRepository.save(chatRoom);
-//            message.setMessage(message.getSender() + " 님이 입장하셨습니다");
-//            sendMessage(message, chatRoom,chatService);
         } else if (message.getType().equals(MessageType.TALK)) {
-            messageService.save(message.getMessage(),message.getRoomId(),message.getSender(),message.getUserType());
+            messageService.save(message.getMessage(), message.getRoomId(), message.getSender(), message.getUserType());
             message.setMessage(message.getMessage());
             sendMessage(message, chatRoom, chatService);
         }
     }
 
-    public <T> void sendMessage(T message, ChatRoom chatRoom,ChatService chatService) {
-        try{
-            chatService.sendMessage(idToSessionMap.get(chatRoom.getBorrowerSessionId()),message);
-        }catch (Exception e){
-
-        }
-        try{
-            chatService.sendMessage(idToSessionMap.get(chatRoom.getLenderSessionId()),message);
-        }catch (Exception e){
-
+    public <T> void sendMessage(T message, ChatRoom chatRoom, ChatService chatService) {
+        try {
+            chatService.sendMessage(idToSessionMap.get(chatRoom.getBorrowerSessionId()), message);
+            chatService.sendMessage(idToSessionMap.get(chatRoom.getLenderSessionId()), message);
+        } catch (Exception e) {
+            throw new FailSendMessageException();
         }
     }
 }

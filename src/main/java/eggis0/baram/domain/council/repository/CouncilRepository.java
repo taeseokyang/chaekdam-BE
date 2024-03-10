@@ -18,4 +18,6 @@ public interface CouncilRepository extends JpaRepository<Council, Integer> {
     List<Council> findAllByCollegeStartingWithOrderByCollege(String prefix);
 
     Council findByManager(User manager);
+
+    boolean existsByManager(User manager);
 }

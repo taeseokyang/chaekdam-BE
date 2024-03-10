@@ -13,12 +13,17 @@ import java.util.Optional;
 @Transactional
 public interface PostRepository extends JpaRepository<Post, Integer> {
     List<Post> findTop3ByUserOrderByCreatedAtDesc(User user);
+
     Boolean existsByPostId(Integer postId);
+
     List<Post> findAllByLocationOrderByIsCloseAscCreatedAtDesc(String location);
+
     Optional<Post> findByPostId(Integer postId);
+
     void deleteByPostId(Integer postId);
-    List<Post> findTop8ByIsCloseOrderByCreatedAtDesc(boolean isClose);
+
     List<Post> findTop8ByLocationStartingWithOrderByCreatedAtDesc(String prefix);
+
     List<Post> findAllByLocationStartingWithOrderByCreatedAtDesc(String prefix);
 
 }

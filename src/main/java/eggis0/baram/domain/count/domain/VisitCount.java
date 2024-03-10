@@ -1,4 +1,4 @@
-package eggis0.baram.domain.visit_count.domain;
+package eggis0.baram.domain.count.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
