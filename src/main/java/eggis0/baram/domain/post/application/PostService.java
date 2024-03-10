@@ -1,5 +1,6 @@
 package eggis0.baram.domain.post.application;
 
+import eggis0.baram.domain.chat.repository.ChatRoomRepository;
 import eggis0.baram.domain.count.domain.VisitCount;
 import eggis0.baram.domain.count.repository.VisitCountRepository;
 import eggis0.baram.domain.image.application.ImageService;
@@ -32,6 +33,7 @@ public class PostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
     private final VisitCountRepository visitCountRepository;
+    private final ChatRoomRepository chatRoomRepository;
     private final ImageService imageService;
 
     public PostResponse save(AddPostRequest request, String userName, MultipartFile pic) {
@@ -62,11 +64,12 @@ public class PostService {
             throw new PostNotFoundException();
         }
         Post post = postRepository.findById(id).get();
-        return new PostResponse(post);
+        Integer chatCnt = chatRoomRepository.countByPost(post);
+        return new PostResponse(post, chatCnt);
     }
 
     public List<PostsResponse> get3ByUser(String userId) {
-        if (!userRepository.existsUserByUserId(userId)) {
+        if (!userRepository.existsUserById(userId)) {
             throw new UserNotFountException();
         }
         User user = userRepository.findById(userId).get();
@@ -96,7 +99,9 @@ public class PostService {
     public List<PostsResponse> getAllByLocation(String location) {
         List<PostsResponse> postsDTO = new ArrayList<>();
         List<Post> posts = postRepository.findAllByLocationOrderByIsCloseAscCreatedAtDesc(location);
+
         for (Post post : posts) {
+            Integer chatCnt = chatRoomRepository.countByPost(post);
             PostsResponse dto = new PostsResponse();
             dto.setPostId(post.getPostId());
             dto.setUserId(post.getUser().getUserId());
@@ -108,6 +113,7 @@ public class PostService {
             dto.setCreatedAt(post.getCreatedAt());
             dto.setClose(post.getIsClose());
             dto.setPostImgPath(post.getImgPath());
+            dto.setChatCount(chatCnt);
             postsDTO.add(dto);
         }
         return postsDTO;
@@ -117,6 +123,7 @@ public class PostService {
         List<PostsResponse> postsDTO = new ArrayList<>();
         List<Post> posts = postRepository.findAllByLocationStartingWithOrderByCreatedAtDesc(campus.equals("global") ? "G" : "M");
         for (Post post : posts) {
+            Integer chatCnt = chatRoomRepository.countByPost(post);
             PostsResponse dto = new PostsResponse();
             dto.setPostId(post.getPostId());
             dto.setUserId(post.getUser().getUserId());
@@ -127,6 +134,7 @@ public class PostService {
             dto.setSecurity(post.getSecurity());
             dto.setCreatedAt(post.getCreatedAt());
             dto.setClose(post.getIsClose());
+            dto.setChatCount(chatCnt);
             postsDTO.add(dto);
         }
         return postsDTO;
@@ -136,6 +144,7 @@ public class PostService {
         List<PostsResponse> postsDTO = new ArrayList<>();
         List<Post> posts = postRepository.findTop8ByLocationStartingWithOrderByCreatedAtDesc(campus.equals("global") ? "G" : "M");
         for (Post post : posts) {
+            Integer chatCnt = chatRoomRepository.countByPost(post);
             PostsResponse dto = new PostsResponse();
             dto.setPostId(post.getPostId());
             dto.setUserId(post.getUser().getUserId());
@@ -146,6 +155,7 @@ public class PostService {
             dto.setSecurity(post.getSecurity());
             dto.setCreatedAt(post.getCreatedAt());
             dto.setClose(post.getIsClose());
+            dto.setChatCount(chatCnt);
             postsDTO.add(dto);
         }
 
@@ -206,7 +216,7 @@ public class PostService {
             throw new UserNotFountException();
         }
         User lender = userRepository.findById(lenderId).get();
-        borrower.setLendCount(lender.getLendCount() + 1);
+        lender.setLendCount(lender.getLendCount() + 1);
         userRepository.save(lender);
     }
 

@@ -31,7 +31,7 @@ public class JwtProvider {
 
     private Key secretKey;
 
-    private final long exp = 3000L * 60 * 60;
+    private final long exp = 48000L * 60 * 60;
 
     private static final String ROLE_KEY = "role";
 

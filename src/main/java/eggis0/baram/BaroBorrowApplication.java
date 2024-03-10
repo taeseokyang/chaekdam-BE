@@ -9,5 +9,4 @@ public class BaroBorrowApplication {
     public static void main(String[] args) {
         SpringApplication.run(BaroBorrowApplication.class, args);
     }
-
 }

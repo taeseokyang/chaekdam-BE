@@ -6,12 +6,12 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.preauth.AbstractPreAuthenticatedProcessingFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 
@@ -36,20 +36,26 @@ public class SecurityConfig {
 
         http
                 .authorizeHttpRequests((authorizeRequests) ->
-                                authorizeRequests
-                                        .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
-                                        .requestMatchers("/login").permitAll()
-                                        .requestMatchers("/register").permitAll()
-                                        .requestMatchers("/oauth/**").permitAll()
-//                                      .requestMatchers("/admin/**").hasRole("ADMIN")
-                                        .requestMatchers("/user/**").hasRole("USER")
-                                        .requestMatchers("/manage/**").hasRole("MANAGER")
+                        authorizeRequests
+                                .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                                .requestMatchers("/login").permitAll()
+                                .requestMatchers("/register").permitAll()
+                                .requestMatchers("/oauth/**").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/anno/**").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/post/**").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/review/**").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/council/**").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/manage/council/**").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/council-item/**").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/council-item/**").permitAll()
+                                .requestMatchers("/image/**").permitAll()
+                                .requestMatchers("/ws/**").permitAll()
 
-                                        .requestMatchers(HttpMethod.POST,"/anno/**").hasRole("USER")
-//                                      .requestMatchers(HttpMethod.POST,"/manage/council").hasRole("ADMIN")
-//                                      .requestMatchers(HttpMethod.PUT,"/certifi/approval").hasRole("ADMIN")
-//                                      .requestMatchers(HttpMethod.GET,"/certifi/requests/**").hasRole("ADMIN")
-                                        .anyRequest().authenticated()
+                                .requestMatchers(HttpMethod.POST, "/anno/**").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.DELETE, "/anno/**").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.GET, "/certifi/**").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.PUT, "/certifi/**").hasRole("ADMIN")
+                                .anyRequest().permitAll()
                 )
                 .addFilterBefore(new JwtFilter(jwtProvider), AbstractPreAuthenticatedProcessingFilter.class);
         return http.build();

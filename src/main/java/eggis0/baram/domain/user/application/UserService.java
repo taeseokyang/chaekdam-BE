@@ -14,11 +14,13 @@ import eggis0.baram.domain.user.exception.UserNotFountException;
 import eggis0.baram.domain.user.repository.UserRepository;
 import eggis0.baram.global.config.security.JwtProvider;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @Transactional
@@ -29,13 +31,21 @@ public class UserService {
     private final JwtProvider jwtProvider;
     private final OAuthService oAuthService;
     private final ImageService imageService;
+    private final RedisTemplate<String, String> redisTemplate;
 
     private static final String DEFAULT_IMAGE = "default.png";
+    public static final long EXPIRATION_TIME = 60 * 60 * 1000L;
 
     public UserResponse kakaoLogin(String code) throws Exception {
         String token = oAuthService.getKakaoAccessToken(code);
         String email = oAuthService.getEmail(token);
         if (!userRepository.existsUserByUserId(email)) {
+            redisTemplate.opsForValue().set(
+                    code,
+                    email,
+                    EXPIRATION_TIME,
+                    TimeUnit.MILLISECONDS
+            );
             throw new UserNotFountException();
         }
         User user = userRepository.findByUserId(email).get();
@@ -49,10 +59,12 @@ public class UserService {
         return signResponse;
     }
 
-    public UserResponse kakaoRegister(String nickname, String email) {
+    public UserResponse kakaoRegister(String nickname, String code) {
+        String email = redisTemplate.opsForValue().get(code);
         if (userRepository.existsUserByUserId(email)) {
             throw new DuplicateUserIdException();
         }
+
         String id = UUID.randomUUID().toString();
         User user = User.builder()
                 .id(id)
@@ -81,7 +93,7 @@ public class UserService {
         }
         User user = userRepository.findByUserId(request.getUserid()).get();
 
-        if (user.getPassWord().equals(request.getPassword())) {
+        if (!user.getPassWord().equals(request.getPassword())) {
             throw new IncorrectPasswordException();
         }
         UserResponse signResponse = UserResponse.builder()

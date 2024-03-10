@@ -32,9 +32,10 @@ public class PostResponse {
     private String postImgPath;
     private boolean isCertification;
     private boolean isLenderWriteReview;
+    private Integer chatCount;
 
     @Builder
-    public PostResponse(Post post){
+    public PostResponse(Post post, Integer chatCount) {
         postId = post.getPostId();
         title = post.getTitle();
         location = post.getLocation();
@@ -51,6 +52,28 @@ public class PostResponse {
         userId = post.getUser().getId();
         userImgPath = post.getUser().getImgPath();
         postImgPath = post.getImgPath();
-        isCertification =  post.getUser().isCertification();
+        isCertification = post.getUser().isCertification();
+        this.chatCount = chatCount;
+    }
+
+    @Builder
+    public PostResponse(Post post) {
+        postId = post.getPostId();
+        title = post.getTitle();
+        location = post.getLocation();
+        locationDetail = post.getLocationDetail();
+        rentalFee = post.getRentalFee();
+        security = post.getSecurity();
+        createdAt = post.getCreatedAt();
+        needAt = post.getNeedAt();
+        returnAt = post.getReturnAt();
+        content = post.getContent();
+        isClose = post.getIsClose();
+        isLenderWriteReview = post.getIsLenderWriteReview();
+        nickname = post.getUser().getNickName();
+        userId = post.getUser().getId();
+        userImgPath = post.getUser().getImgPath();
+        postImgPath = post.getImgPath();
+        isCertification = post.getUser().isCertification();
     }
 }

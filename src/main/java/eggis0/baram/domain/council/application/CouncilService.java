@@ -62,7 +62,7 @@ public class CouncilService {
     }
 
     public CouncilResponse get(Integer id) {
-        if (councilRepository.existsById(id)) {
+        if (!councilRepository.existsById(id)) {
             throw new CouncilNotFoundException();
         }
         Council council = councilRepository.findById(id).get();

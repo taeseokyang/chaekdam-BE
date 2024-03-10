@@ -6,6 +6,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class KakaoSignUpRequest {
-    private String email;
+    private String code;
     private String nickname;
 }

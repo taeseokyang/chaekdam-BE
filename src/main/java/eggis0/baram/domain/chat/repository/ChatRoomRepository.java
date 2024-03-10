@@ -22,4 +22,6 @@ public interface ChatRoomRepository extends JpaRepository<ChatRoom, Integer> {
     List<ChatRoom> findAllByLenderOrderByCreatedAtDesc(User lender);
 
     Optional<ChatRoom> findByBorrowerAndLenderAndPost(User borrower, User Lender, Post post);
+
+    Integer countByPost(Post post);
 }

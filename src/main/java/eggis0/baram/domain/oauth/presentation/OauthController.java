@@ -25,7 +25,7 @@ public class OauthController {
 
     @PostMapping(value = "/kakao")
     public ResponseDto<UserResponse> signUp(@RequestBody KakaoSignUpRequest request) {
-        UserResponse response = userService.kakaoRegister(request.getNickname(), request.getEmail());
+        UserResponse response = userService.kakaoRegister(request.getNickname(), request.getCode());
         return ResponseDto.of(OK.value(), SUCCESS_REGISTER.getMessage(), response);
     }
 }

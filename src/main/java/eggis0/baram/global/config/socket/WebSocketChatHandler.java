@@ -45,7 +45,7 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
     }
 
     @Override
-    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
+    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
         Long removedSessionIdx = sessionToIdMap.remove(session);
         idToSessionMap.remove(removedSessionIdx);
         log.info("{} 연결 끊김", session.getId());
@@ -56,8 +56,8 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
         ChatRoom chatRoom = chatRoomRepository.findByRoomId(message.getRoomId());
 
         if (message.getType().equals(MessageType.ENTER)) {
+            System.out.println("hello");
             session_Idx += 1;
-
             sessionToIdMap.put(session, session_Idx);
             idToSessionMap.put(session_Idx, session);
 
@@ -65,8 +65,10 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
                 chatRoom.setBorrowerSessionId(session_Idx);
             else if (message.getUserType().equals(UserType.LENDER))
                 chatRoom.setLenderSessionId(session_Idx);
-
             chatRoomRepository.save(chatRoom);
+
+//            message.setMessage(message.getSender() + " 님이 입장하셨습니다");
+//            sendMessage(message, chatRoom, chatService);
         } else if (message.getType().equals(MessageType.TALK)) {
             messageService.save(message.getMessage(), message.getRoomId(), message.getSender(), message.getUserType());
             message.setMessage(message.getMessage());

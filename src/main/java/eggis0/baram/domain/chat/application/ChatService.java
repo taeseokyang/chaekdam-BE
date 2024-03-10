@@ -71,17 +71,19 @@ public class ChatService {
             chatRoomsBoth.add(chatRoomsForLending);
 
             List<List<ChatRoomsResponse>> BorrowAndLendDTO = new ArrayList<>();
-            for (List<ChatRoom> chatRooms : chatRoomsBoth) {
+            for (int i = 0; i < chatRoomsBoth.size(); i++) {
+                List<ChatRoom> chatRooms = chatRoomsBoth.get(i);
                 List<ChatRoomsResponse> chatRoomsDTO = new ArrayList<>();
                 for (ChatRoom chatRoom : chatRooms) {
                     Optional<Message> optionalLastMessage = messageRepository.findFirstByChatRoomOrderBySentAtDesc(chatRoom);
                     String lastMessage = NO_MESSAGE;
-                    LocalDateTime lastMeesageTime = LocalDateTime.now();
+                    LocalDateTime lastMessageTime = LocalDateTime.now();
                     if (optionalLastMessage.isPresent()) {
                         lastMessage = optionalLastMessage.get().getMessage();
-                        lastMeesageTime = optionalLastMessage.get().getSentAt();
+                        lastMessageTime = optionalLastMessage.get().getSentAt();
                     }
-                    chatRoomsDTO.add(new ChatRoomsResponse(chatRoom, UserType.BORROWER, lastMessage, lastMeesageTime));
+                    UserType userType = i == 0 ? UserType.BORROWER : UserType.LENDER;
+                    chatRoomsDTO.add(new ChatRoomsResponse(chatRoom, userType, lastMessage, lastMessageTime));
                 }
                 BorrowAndLendDTO.add(chatRoomsDTO);
             }
@@ -92,7 +94,9 @@ public class ChatService {
 
     public <T> void sendMessage(WebSocketSession session, T message) {
         try {
-            session.sendMessage(new TextMessage(mapper.writeValueAsString(message)));
+            if (session != null) {
+                session.sendMessage(new TextMessage(mapper.writeValueAsString(message)));
+            }
         } catch (IOException e) {
             throw new FailSendMessageException();
         }
