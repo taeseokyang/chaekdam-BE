@@ -134,6 +134,7 @@ public class PostService {
             dto.setSecurity(post.getSecurity());
             dto.setCreatedAt(post.getCreatedAt());
             dto.setClose(post.getIsClose());
+            dto.setPostImgPath(post.getImgPath());
             dto.setChatCount(chatCnt);
             postsDTO.add(dto);
         }
