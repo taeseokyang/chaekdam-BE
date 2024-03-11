@@ -47,7 +47,7 @@ public class CertificationService {
     }
 
     public CertifiResponse get(Long id) {
-        if (certificationRepository.existsById(id)) {
+        if (!certificationRepository.existsById(id)) {
             throw new CertifiNotFoundException();
         }
         Certification certification = certificationRepository.findById(id).get();
@@ -64,6 +64,7 @@ public class CertificationService {
             dto.setName(certification.getName());
             dto.setStudentIdNumber(certification.getStudentIdNumber());
             dto.setUser(certification.getUser());
+            dto.setRequestAt(certification.getRequestAt());
             dto.setImgPath(certification.getImgPath());
             certifisDTO.add(dto);
         }
