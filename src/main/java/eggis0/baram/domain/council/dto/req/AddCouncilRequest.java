@@ -11,4 +11,6 @@ public class AddCouncilRequest {
     private String location;
     private String operatingHours;
     private String usageGuidelines;
+    private Double latitude;
+    private Double longitude;
 }

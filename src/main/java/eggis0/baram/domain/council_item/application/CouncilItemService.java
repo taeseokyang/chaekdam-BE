@@ -7,6 +7,7 @@ import eggis0.baram.domain.council_item.domain.CouncilItem;
 import eggis0.baram.domain.council_item.dto.req.AddCouncilItemRequest;
 import eggis0.baram.domain.council_item.dto.req.UpdateCouncilItemRequest;
 import eggis0.baram.domain.council_item.dto.res.CouncilItemResponse;
+import eggis0.baram.domain.council_item.dto.res.SearchResponse;
 import eggis0.baram.domain.council_item.exception.CouncilItemNotFoundException;
 import eggis0.baram.domain.council_item.repository.CouncilItemRepository;
 import eggis0.baram.domain.user.domain.User;
@@ -74,6 +75,17 @@ public class CouncilItemService {
         }
         return councilItemsDTO;
     }
+
+    public List<SearchResponse> getByKeyword(String keyword) {
+        List<SearchResponse> councilItemsDTO = new ArrayList<>();
+        List<CouncilItem> councilItems = councilItemRepository.findTop5ByNameContaining(keyword);
+        for (CouncilItem councilItem : councilItems) {
+            SearchResponse dto = new SearchResponse(councilItem);
+            councilItemsDTO.add(dto);
+        }
+        return councilItemsDTO;
+    }
+
 
     public void delete(Integer councilItemId) {
         if (!councilItemRepository.existsById(councilItemId)) {

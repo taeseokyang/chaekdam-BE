@@ -4,6 +4,7 @@ import eggis0.baram.domain.council_item.application.CouncilItemService;
 import eggis0.baram.domain.council_item.dto.req.AddCouncilItemRequest;
 import eggis0.baram.domain.council_item.dto.req.UpdateCouncilItemRequest;
 import eggis0.baram.domain.council_item.dto.res.CouncilItemResponse;
+import eggis0.baram.domain.council_item.dto.res.SearchResponse;
 import eggis0.baram.global.config.dto.ResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +25,12 @@ public class CouncilItemApiController {
     public ResponseDto<CouncilItemResponse> save(@RequestBody AddCouncilItemRequest request) {
         CouncilItemResponse response = councilItemService.save(request);
         return ResponseDto.of(OK.value(), SUCCESS_CREATE.getMessage(), response);
+    }
+
+    @GetMapping("/search/{keyword}")
+    public ResponseDto<List<SearchResponse>> getByKeyword(@PathVariable String keyword) {
+        List<SearchResponse> responses = councilItemService.getByKeyword(keyword);
+        return ResponseDto.of(OK.value(), SUCCESS_READ.getMessage(), responses);
     }
 
     @GetMapping("/all")

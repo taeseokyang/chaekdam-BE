@@ -14,7 +14,7 @@ import java.net.URL;
 public class OAuthService {
 
     private static final String REST_API_KEY = "cd1ddaf4965cd20d1500023af8129185";
-    private static final String REDIRECT_URI = "http://43.202.228.198:3000/oauth/kakao";
+    private static final String REDIRECT_URI = "https://baram.today/oauth/kakao";
 
     public String getKakaoAccessToken(String code) {
         String access_Token = "";

@@ -19,24 +19,29 @@ public class CouncilResponse {
     private String location;
     private String operatingHours;
     private String usageGuidelines;
+    private Double latitude;
+    private Double longitude;
     private String imgPath;
     private List<CouncilItem> items = new ArrayList<>();
     private Boolean isCouncilSelfManage;
+
     @Builder
-    public CouncilResponse(Council council, String imgPath){
+    public CouncilResponse(Council council, String imgPath) {
         councilId = council.getCouncilId();
         college = council.getCollege();
         name = council.getName();
         location = council.getLocation();
         operatingHours = council.getOperatingHours();
         usageGuidelines = council.getUsageGuidelines();
+        latitude = council.getLatitude();
+        longitude = council.getLongitude();
         this.imgPath = imgPath;
         items = council.getItems();
         isCouncilSelfManage = council.getIsCouncilSelfManage();
     }
 
     @Builder
-    public CouncilResponse(Council council){
+    public CouncilResponse(Council council) {
         councilId = council.getCouncilId();
         college = council.getCollege();
         name = council.getName();

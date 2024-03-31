@@ -7,6 +7,7 @@ import eggis0.baram.domain.image.application.ImageService;
 import eggis0.baram.domain.post.domain.Post;
 import eggis0.baram.domain.post.dto.req.AddPostRequest;
 import eggis0.baram.domain.post.dto.req.UpdatePostRequest;
+import eggis0.baram.domain.post.dto.res.PageResponse;
 import eggis0.baram.domain.post.dto.res.PostResponse;
 import eggis0.baram.domain.post.dto.res.PostsResponse;
 import eggis0.baram.domain.post.exception.PostNotFoundException;
@@ -15,6 +16,9 @@ import eggis0.baram.domain.user.domain.User;
 import eggis0.baram.domain.user.exception.UserNotFountException;
 import eggis0.baram.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -35,6 +39,8 @@ public class PostService {
     private final VisitCountRepository visitCountRepository;
     private final ChatRoomRepository chatRoomRepository;
     private final ImageService imageService;
+
+    private static final int PAGE_SIZE = 10;
 
     public PostResponse save(AddPostRequest request, String userName, MultipartFile pic) {
         User user = userRepository.findByUserId(userName).get();
@@ -96,9 +102,13 @@ public class PostService {
         return postsDTO;
     }
 
-    public List<PostsResponse> getAllByLocation(String location) {
+    public PageResponse getAllByLocation(String location, int page) {
         List<PostsResponse> postsDTO = new ArrayList<>();
-        List<Post> posts = postRepository.findAllByLocationOrderByIsCloseAscCreatedAtDesc(location);
+        int pageNumber = page;
+        Sort sort = Sort.by("createdAt").ascending();
+        Pageable pageable = PageRequest.of(pageNumber, PAGE_SIZE, sort);
+
+        List<Post> posts = postRepository.findAllByLocationOrderByIsCloseAscCreatedAtDesc(location, pageable);
 
         for (Post post : posts) {
             Integer chatCnt = chatRoomRepository.countByPost(post);
@@ -116,12 +126,28 @@ public class PostService {
             dto.setChatCount(chatCnt);
             postsDTO.add(dto);
         }
-        return postsDTO;
+
+        PageResponse pageDTO = new PageResponse();
+        Long postsCount = postRepository.countAllByLocation(location);
+
+        boolean isLast = false;
+        if ((int) ((postsCount - 1) / 10) == page) {
+            isLast = true;
+        }
+        pageDTO.setLast(isLast);
+        pageDTO.setPosts(postsDTO);
+
+        return pageDTO;
     }
 
-    public List<PostsResponse> getAllPostByCampus(String campus) {
+    public PageResponse getAllPostByCampus(String campus, int page) {
         List<PostsResponse> postsDTO = new ArrayList<>();
-        List<Post> posts = postRepository.findAllByLocationStartingWithOrderByCreatedAtDesc(campus.equals("global") ? "G" : "M");
+
+        int pageNumber = page;
+        Sort sort = Sort.by("createdAt").ascending();
+        Pageable pageable = PageRequest.of(pageNumber, PAGE_SIZE, sort);
+
+        List<Post> posts = postRepository.findAllByLocationStartingWithOrderByCreatedAtDesc(campus.equals("global") ? "G" : "M", pageable);
         for (Post post : posts) {
             Integer chatCnt = chatRoomRepository.countByPost(post);
             PostsResponse dto = new PostsResponse();
@@ -138,7 +164,19 @@ public class PostService {
             dto.setChatCount(chatCnt);
             postsDTO.add(dto);
         }
-        return postsDTO;
+
+        PageResponse pageDTO = new PageResponse();
+
+        Long postsCount = postRepository.countAllByLocationStartingWith(campus.equals("global") ? "G" : "M");
+
+        boolean isLast = false;
+        if ((int) ((postsCount - 1) / 10) == page) {
+            isLast = true;
+        }
+        pageDTO.setLast(isLast);
+        pageDTO.setPosts(postsDTO);
+
+        return pageDTO;
     }
 
     public List<PostsResponse> get8(String campus) {

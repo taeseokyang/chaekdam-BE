@@ -3,6 +3,7 @@ package eggis0.baram.domain.post.presentation;
 import eggis0.baram.domain.post.application.PostService;
 import eggis0.baram.domain.post.dto.req.AddPostRequest;
 import eggis0.baram.domain.post.dto.req.UpdatePostRequest;
+import eggis0.baram.domain.post.dto.res.PageResponse;
 import eggis0.baram.domain.post.dto.res.PostResponse;
 import eggis0.baram.domain.post.dto.res.PostsResponse;
 import eggis0.baram.global.config.dto.ResponseDto;
@@ -41,15 +42,15 @@ public class PostApiController {
         return ResponseDto.of(OK.value(), SUCCESS_READ.getMessage(), responses);
     }
 
-    @GetMapping("/all/location/{location}")
-    public ResponseDto<List<PostsResponse>> getAllByLocation(@PathVariable String location) {
-        List<PostsResponse> responses = postService.getAllByLocation(location);
+    @GetMapping("/all/location/{location}/{page}")
+    public ResponseDto<PageResponse> getAllByLocation(@PathVariable String location, @PathVariable int page) {
+        PageResponse responses = postService.getAllByLocation(location, page);
         return ResponseDto.of(OK.value(), SUCCESS_READ.getMessage(), responses);
     }
 
-    @GetMapping("/all/campus/{campus}")
-    public ResponseDto<List<PostsResponse>> getAllPostByCampus(@PathVariable String campus) {
-        List<PostsResponse> responses = postService.getAllPostByCampus(campus);
+    @GetMapping("/all/campus/{campus}/{page}")
+    public ResponseDto<PageResponse> getAllPostByCampus(@PathVariable String campus, @PathVariable int page) {
+        PageResponse responses = postService.getAllPostByCampus(campus, page);
         return ResponseDto.of(OK.value(), SUCCESS_READ.getMessage(), responses);
     }
 
