@@ -22,4 +22,4 @@ jwt:
   secret:
     key: ${SECRET_KEY}
 image:
-  path: ${REDIS_PASSWORD}
+  path: ${IMAGE_PATH}

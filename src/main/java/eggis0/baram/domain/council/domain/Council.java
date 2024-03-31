@@ -45,6 +45,12 @@ public class Council {
     @Column(nullable = false)
     private Boolean isCouncilSelfManage;
 
+    @Column
+    private Double latitude;
+
+    @Column
+    private Double longitude;
+
     @OneToMany(mappedBy = "council", fetch = FetchType.EAGER, orphanRemoval = true)
     private List<CouncilItem> items = new ArrayList<>();
 }

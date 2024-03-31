@@ -45,6 +45,8 @@ public class CouncilService {
                 .location(request.getLocation())
                 .operatingHours(request.getOperatingHours())
                 .usageGuidelines(request.getUsageGuidelines())
+                .latitude(request.getLatitude())
+                .longitude(request.getLongitude())
                 .isCouncilSelfManage(false)
                 .build();
 

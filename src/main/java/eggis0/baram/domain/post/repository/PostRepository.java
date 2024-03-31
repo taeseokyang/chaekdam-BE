@@ -2,6 +2,7 @@ package eggis0.baram.domain.post.repository;
 
 import eggis0.baram.domain.post.domain.Post;
 import eggis0.baram.domain.user.domain.User;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,7 +17,7 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
 
     Boolean existsByPostId(Integer postId);
 
-    List<Post> findAllByLocationOrderByIsCloseAscCreatedAtDesc(String location);
+    List<Post> findAllByLocationOrderByIsCloseAscCreatedAtDesc(String location, Pageable pageable);
 
     Optional<Post> findByPostId(Integer postId);
 
@@ -24,6 +25,9 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
 
     List<Post> findTop8ByLocationStartingWithOrderByCreatedAtDesc(String prefix);
 
-    List<Post> findAllByLocationStartingWithOrderByCreatedAtDesc(String prefix);
+    List<Post> findAllByLocationStartingWithOrderByCreatedAtDesc(String prefix, Pageable pageable);
 
+    Long countAllByLocationStartingWith(String prefix);
+
+    Long countAllByLocation(String location);
 }
