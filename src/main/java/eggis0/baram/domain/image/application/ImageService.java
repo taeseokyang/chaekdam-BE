@@ -17,15 +17,18 @@ public class ImageService {
 
     @Value("${image.path}")
     private String IMAGE_PATH;
-    private static final String DEFAULT_IMAGE = "default.png";
+    public String DEFAULT_IMAGE = "default.png";
 
-    public String save(MultipartFile pic) {
+    @Value("${image.secret-key}")
+    public String IMPORTANT_KEYWORD;
+
+    public String save(MultipartFile pic, Boolean isImportant) {
         if (pic == null) {
             return DEFAULT_IMAGE;
         }
         UUID uuid = UUID.randomUUID();
         String imageFileName = uuid + pic.getOriginalFilename();
-        Path imagePath = Paths.get(IMAGE_PATH + imageFileName);
+        Path imagePath = Paths.get(IMAGE_PATH + (isImportant ? IMPORTANT_KEYWORD : "") + imageFileName);
         try {
             Files.write(imagePath, pic.getBytes());
         } catch (Exception e) {
