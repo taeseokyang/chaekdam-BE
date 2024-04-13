@@ -32,14 +32,14 @@ public class CertificationService {
             throw new UserNotFountException();
         }
 
-        String imageFileName = imageService.save(pic);
+        String imageFileName = imageService.save(pic, true);
         User user = userRepository.findByUserId(userId).get();
         Certification certification = Certification.builder()
                 .user(user)
                 .name(request.getName())
                 .studentIdNumber(request.getStudentIdNumber())
                 .requestAt(LocalDateTime.now())
-                .imgPath(imageFileName)
+                .imgPath(imageService.IMPORTANT_KEYWORD + imageFileName)
                 .build();
 
         certificationRepository.save(certification);

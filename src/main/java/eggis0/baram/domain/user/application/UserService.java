@@ -128,7 +128,7 @@ public class UserService {
         if (userRepository.existsUserByUserId(request.getUserid())) {
             throw new DuplicateUserIdException();
         }
-        String imageFileName = imageService.save(pic);
+        String imageFileName = imageService.save(pic, false);
         String id = UUID.randomUUID().toString();
         User user = User.builder()
                 .id(id)
