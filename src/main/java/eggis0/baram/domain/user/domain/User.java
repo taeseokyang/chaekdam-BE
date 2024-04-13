@@ -26,6 +26,9 @@ public class User {
     private String nickName;
 
     @Column
+    private String phone;
+
+    @Column
     private String imgPath = "default.png";
 
     @Column

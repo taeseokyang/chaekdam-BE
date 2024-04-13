@@ -3,7 +3,9 @@ package eggis0.baram.domain.oauth.application;
 
 import com.nimbusds.jose.shaded.gson.JsonElement;
 import com.nimbusds.jose.shaded.gson.JsonParser;
+import eggis0.baram.domain.oauth.domain.KakaoUserInfo;
 import eggis0.baram.domain.oauth.exception.FailGetTokenException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
@@ -13,7 +15,8 @@ import java.net.URL;
 @Service
 public class OAuthService {
 
-    private static final String REST_API_KEY = "cd1ddaf4965cd20d1500023af8129185";
+    @Value("${kakao.rest-api-key}")
+    private String REST_API_KEY;
     private static final String REDIRECT_URI = "https://baram.today/oauth/kakao";
 
     public String getKakaoAccessToken(String code) {
@@ -63,7 +66,7 @@ public class OAuthService {
         return access_Token;
     }
 
-    public String getEmail(String token) throws Exception {
+    public KakaoUserInfo getKakaoUserInfo(String token) throws Exception {
         String reqURL = "https://kapi.kakao.com/v2/user/me";
 
         URL url = new URL(reqURL);
@@ -82,6 +85,7 @@ public class OAuthService {
         while ((line = br.readLine()) != null) {
             result += line;
         }
+        System.out.println(result);
 
         JsonParser parser = new JsonParser();
         JsonElement element = parser.parse(result);
@@ -92,7 +96,14 @@ public class OAuthService {
         if (hasEmail) {
             email = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("email").getAsString();
         }
+
+        boolean hasPhoneNumber = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("has_phone_number").getAsBoolean();
+        String phoneNumber = "";
+        if (hasPhoneNumber) {
+            phoneNumber = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("phone_number").getAsString();
+        }
+
         br.close();
-        return email;
+        return new KakaoUserInfo(email, phoneNumber);
     }
 }

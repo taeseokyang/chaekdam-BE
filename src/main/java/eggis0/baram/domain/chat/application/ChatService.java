@@ -14,6 +14,8 @@ import eggis0.baram.domain.post.repository.PostRepository;
 import eggis0.baram.domain.user.domain.User;
 import eggis0.baram.domain.user.domain.UserType;
 import eggis0.baram.domain.user.repository.UserRepository;
+import eggis0.baram.global.config.alertTalk.AlertTalkSender;
+import eggis0.baram.global.config.alertTalk.TemplateType;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -36,6 +38,7 @@ public class ChatService {
     private final ChatRoomRepository chatRoomRepository;
     private final MessageRepository messageRepository;
     private final ObjectMapper mapper;
+    private final AlertTalkSender alertTalkSender;
     private static final String NO_MESSAGE = "no message";
 
     public ChatRoomResponse save(AddChatRoomRequest request) {
@@ -56,6 +59,8 @@ public class ChatService {
                 .post(post)
                 .createdAt(LocalDateTime.now())
                 .build();
+
+        alertTalkSender.sendKakaoAlertTalk(lender.getNickName(), post.getTitle(), borrower.getPhone(), TemplateType.START_CHAT);
         return new ChatRoomResponse(chatRoomRepository.save(chatRoom));
     }
 
@@ -101,4 +106,5 @@ public class ChatService {
             throw new FailSendMessageException();
         }
     }
+
 }
