@@ -15,6 +15,7 @@ import eggis0.baram.domain.post.repository.PostRepository;
 import eggis0.baram.domain.user.domain.User;
 import eggis0.baram.domain.user.exception.UserNotFountException;
 import eggis0.baram.domain.user.repository.UserRepository;
+import eggis0.baram.global.config.alertTalk.AlertTalkSender;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -42,6 +43,8 @@ public class PostService {
 
     private static final int PAGE_SIZE = 10;
 
+    private final AlertTalkSender alertTalkSender;
+
     public PostResponse save(AddPostRequest request, String userName, MultipartFile pic) {
         User user = userRepository.findByUserId(userName).get();
 
@@ -62,8 +65,10 @@ public class PostService {
                 .imgPath(imageFileName)
                 .build();
         Post savedPost = postRepository.save(post);
+
         return new PostResponse(savedPost);
     }
+
 
     public PostResponse get(Integer id) {
         if (!postRepository.existsByPostId(id)) {
@@ -129,7 +134,6 @@ public class PostService {
 
         PageResponse pageDTO = new PageResponse();
         Long postsCount = postRepository.countAllByLocation(location);
-
         boolean isLast = false;
         if ((int) ((postsCount - 1) / 10) == page) {
             isLast = true;

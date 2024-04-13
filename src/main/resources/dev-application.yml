@@ -23,3 +23,9 @@
 #    key: ${SECRET_KEY}
 #image:
 #  path: ${IMAGE_PATH}
+#server:
+#  port: 443
+#  ssl:
+#    key-store: classpath:keystore.p12
+#    key-store-type: PKCS12
+#    key-store-password: ${SSL_PASSWORD}

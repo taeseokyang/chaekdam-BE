@@ -3,6 +3,7 @@ package eggis0.baram.domain.user.application;
 import eggis0.baram.domain.certification.dto.req.UpdateUserCertifiRequest;
 import eggis0.baram.domain.image.application.ImageService;
 import eggis0.baram.domain.oauth.application.OAuthService;
+import eggis0.baram.domain.oauth.domain.KakaoUserInfo;
 import eggis0.baram.domain.user.domain.Role;
 import eggis0.baram.domain.user.domain.User;
 import eggis0.baram.domain.user.dto.req.UpdateUserRequest;
@@ -36,13 +37,28 @@ public class UserService {
     private static final String DEFAULT_IMAGE = "default.png";
     public static final long EXPIRATION_TIME = 60 * 60 * 1000L;
 
+    private static final String EMAIL_KEYWORD = "E";
+    private static final String PHONE_NUMBER_KEYWORD = "P";
+
+
     public UserResponse kakaoLogin(String code) throws Exception {
         String token = oAuthService.getKakaoAccessToken(code);
-        String email = oAuthService.getEmail(token);
+        KakaoUserInfo kakaoUserInfo = oAuthService.getKakaoUserInfo(token);
+
+        String email = kakaoUserInfo.getEmail();
+        String phoneNumber = kakaoUserInfo.getPhoneNumber();
+
         if (!userRepository.existsUserByUserId(email)) {
             redisTemplate.opsForValue().set(
-                    code,
+                    EMAIL_KEYWORD + code,
                     email,
+                    EXPIRATION_TIME,
+                    TimeUnit.MILLISECONDS
+            );
+
+            redisTemplate.opsForValue().set(
+                    PHONE_NUMBER_KEYWORD + code,
+                    phoneNumber,
                     EXPIRATION_TIME,
                     TimeUnit.MILLISECONDS
             );
@@ -60,7 +76,8 @@ public class UserService {
     }
 
     public UserResponse kakaoRegister(String nickname, String code) {
-        String email = redisTemplate.opsForValue().get(code);
+        String email = redisTemplate.opsForValue().get(EMAIL_KEYWORD + code);
+        String phoneNumber = redisTemplate.opsForValue().get(PHONE_NUMBER_KEYWORD + code);
         if (userRepository.existsUserByUserId(email)) {
             throw new DuplicateUserIdException();
         }
@@ -69,6 +86,7 @@ public class UserService {
         User user = User.builder()
                 .id(id)
                 .userId(email)
+                .phone(phoneNumber)
                 .nickName(nickname)
                 .imgPath(DEFAULT_IMAGE)
                 .borrowCount(0)
