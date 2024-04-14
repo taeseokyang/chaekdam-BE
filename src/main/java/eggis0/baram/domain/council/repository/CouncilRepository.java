@@ -13,9 +13,10 @@ import java.util.List;
 public interface CouncilRepository extends JpaRepository<Council, Integer> {
     void deleteByCouncilId(Integer councilId);
 
-    List<Council> findAllByOrderByCollege();
+    List<Council> findAllByIsVisibleOrderByCollege(boolean isVisible);
 
-    List<Council> findAllByCollegeStartingWithOrderByCollege(String prefix);
+
+    List<Council> findAllByCollegeStartingWithAndIsVisibleOrderByCollege(String prefix, boolean isVisible);
 
     Council findByManager(User manager);
 

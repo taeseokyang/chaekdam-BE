@@ -8,5 +8,5 @@ import java.util.List;
 
 @Transactional
 public interface CertificationRepository extends JpaRepository<Certification, Long> {
-    List<Certification> findAllByOrderByUserIsCertification();
+    List<Certification> findAllByOrderByRequestAtDesc();
 }

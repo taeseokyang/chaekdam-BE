@@ -10,6 +10,7 @@ import eggis0.baram.domain.user.domain.User;
 import eggis0.baram.domain.user.exception.UserNotFountException;
 import eggis0.baram.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,6 +27,9 @@ public class CertificationService {
     private final UserRepository userRepository;
     private final CertificationRepository certificationRepository;
     private final ImageService imageService;
+    private final RedisTemplate<String, String> redisTemplate;
+    public static final long EXPIRATION_TIME = 60 * 60 * 1000L;
+
 
     public CertifiResponse save(CertifiRequest request, MultipartFile pic, String userId) throws Exception {
         if (!userRepository.existsUserByUserId(userId)) {
@@ -51,12 +55,14 @@ public class CertificationService {
             throw new CertifiNotFoundException();
         }
         Certification certification = certificationRepository.findById(id).get();
+
         return new CertifiResponse(certification);
     }
 
     public List<CertifiResponse> getAll() {
+
         List<CertifiResponse> certifisDTO = new ArrayList<>();
-        List<Certification> certifications = certificationRepository.findAllByOrderByUserIsCertification();
+        List<Certification> certifications = certificationRepository.findAllByOrderByRequestAtDesc();
 
         for (Certification certification : certifications) {
             CertifiResponse dto = new CertifiResponse();

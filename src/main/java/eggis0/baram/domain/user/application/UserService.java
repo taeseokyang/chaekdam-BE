@@ -154,10 +154,19 @@ public class UserService {
     public UserResponse updateNicknameAndPhoto(String userId, MultipartFile pic, UpdateUserRequest request) {
         User user = userRepository.findByUserId(userId).orElseThrow(IllegalArgumentException::new);
         if (pic != null) {
-            String imageFileName = imageService.save(pic);
+            String imageFileName = imageService.save(pic, false);
             user.setImgPath(imageFileName);
         }
         user.setNickName(request.getNickname());
+        User updatedUser = userRepository.save(user);
+
+        return new UserResponse(updatedUser);
+    }
+
+    public UserResponse withdrawal(String userId) {
+        User user = userRepository.findByUserId(userId).orElseThrow(IllegalArgumentException::new);
+        user.setUserId("");
+        user.setPhone("");
         User updatedUser = userRepository.save(user);
 
         return new UserResponse(updatedUser);

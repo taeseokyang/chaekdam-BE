@@ -18,14 +18,14 @@ public class ImageController {
 
     @Value("${image.path}")
     private String IMAGE_PATH;
-    private ImageService imageService;
+    private final ImageService imageService;
 
     @GetMapping("/image/{path}")
     public ResponseEntity<?> returnImage(@PathVariable String path) {
-        if (path.contains(imageService.IMPORTANT_KEYWORD)) {
-            Resource resource = new FileSystemResource(IMAGE_PATH + imageService.DEFAULT_IMAGE);
-            return new ResponseEntity<>(resource, HttpStatus.OK);
-        }
+//        if (path.contains(imageService.IMPORTANT_KEYWORD)) {
+//            Resource resource = new FileSystemResource(IMAGE_PATH + imageService.DEFAULT_IMAGE);
+//            return new ResponseEntity<>(resource, HttpStatus.OK);
+//        }
         Resource resource = new FileSystemResource(IMAGE_PATH + path);
         return new ResponseEntity<>(resource, HttpStatus.OK);
     }
