@@ -45,6 +45,9 @@ public class Council {
     @Column(nullable = false)
     private Boolean isCouncilSelfManage;
 
+    @Column(nullable = false)
+    private Boolean isVisible;
+
     @Column
     private Double latitude;
 

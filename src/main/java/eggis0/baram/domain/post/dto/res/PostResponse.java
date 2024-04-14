@@ -32,6 +32,7 @@ public class PostResponse {
     private String postImgPath;
     private boolean isCertification;
     private boolean isLenderWriteReview;
+    private String lenderId;
     private Integer chatCount;
 
     @Builder
@@ -48,6 +49,7 @@ public class PostResponse {
         content = post.getContent();
         isClose = post.getIsClose();
         isLenderWriteReview = post.getIsLenderWriteReview();
+        lenderId = post.getLenderId();
         nickname = post.getUser().getNickName();
         userId = post.getUser().getId();
         userImgPath = post.getUser().getImgPath();
@@ -70,6 +72,7 @@ public class PostResponse {
         content = post.getContent();
         isClose = post.getIsClose();
         isLenderWriteReview = post.getIsLenderWriteReview();
+        lenderId = post.getLenderId();
         nickname = post.getUser().getNickName();
         userId = post.getUser().getId();
         userImgPath = post.getUser().getImgPath();

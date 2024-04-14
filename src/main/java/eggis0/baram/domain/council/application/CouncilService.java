@@ -48,6 +48,7 @@ public class CouncilService {
                 .latitude(request.getLatitude())
                 .longitude(request.getLongitude())
                 .isCouncilSelfManage(false)
+                .isVisible(false)
                 .build();
 
         Council savedCouncil = councilRepository.save(council);
@@ -68,6 +69,9 @@ public class CouncilService {
             throw new CouncilNotFoundException();
         }
         Council council = councilRepository.findById(id).get();
+        if (!council.getIsVisible()) {
+            throw new CouncilNotFoundException();
+        }
         return new CouncilResponse(council, council.getManager().getImgPath());
     }
 
@@ -80,7 +84,7 @@ public class CouncilService {
     // 모두 조회
     public List<CouncilsResponse> getAll() {
         List<CouncilsResponse> councilsDTO = new ArrayList<>();
-        List<Council> councils = councilRepository.findAllByOrderByCollege();
+        List<Council> councils = councilRepository.findAllByIsVisibleOrderByCollege(true);
         for (Council council : councils) {
             CouncilsResponse dto = new CouncilsResponse();
             dto.setCouncilId(council.getCouncilId());
@@ -97,7 +101,7 @@ public class CouncilService {
     // 모두 조회
     public List<CouncilsResponse> getAllByCampus(String campus) {
         List<CouncilsResponse> councilsDTO = new ArrayList<>();
-        List<Council> councils = councilRepository.findAllByCollegeStartingWithOrderByCollege(campus.equals(GLOBAL) ? PREFIX_GLOBAL : PREFIX_MEDICAL);
+        List<Council> councils = councilRepository.findAllByCollegeStartingWithAndIsVisibleOrderByCollege(campus.equals(GLOBAL) ? PREFIX_GLOBAL : PREFIX_MEDICAL, true);
         for (Council council : councils) {
             CouncilsResponse dto = new CouncilsResponse();
             dto.setCouncilId(council.getCouncilId());

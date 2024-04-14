@@ -55,7 +55,7 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.DELETE, "/anno/**").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.GET, "/certifi/**").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.PUT, "/certifi/**").hasRole("ADMIN")
-                                .anyRequest().denyAll()
+                                .anyRequest().permitAll()
                 )
                 .addFilterBefore(new JwtFilter(jwtProvider), AbstractPreAuthenticatedProcessingFilter.class);
         return http.build();

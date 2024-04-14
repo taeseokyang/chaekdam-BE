@@ -243,6 +243,7 @@ public class PostService {
         }
         Post post = postRepository.findById(postId).get();
         post.setIsClose(true);
+        post.setLenderId(lenderId);
         postRepository.save(post);
 
         if (!userRepository.existsUserById(borrowerId)) {

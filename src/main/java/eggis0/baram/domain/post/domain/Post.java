@@ -53,6 +53,9 @@ public class Post {
     @Column(nullable = false)
     private Boolean isLenderWriteReview;
 
+    @Column
+    private String lenderId;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id")
     @JsonIgnore

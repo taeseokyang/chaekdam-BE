@@ -41,5 +41,9 @@ public class UserController {
         return ResponseDto.of(OK.value(), SUCCESS_UPDATE.getMessage(), response);
     }
 
-
+    @PutMapping("/account/withdrawal")
+    public ResponseDto<UserResponse> withdrawal(Authentication authentication) {
+        userService.withdrawal(authentication.getName());
+        return ResponseDto.of(OK.value(), SUCCESS_UPDATE.getMessage());
+    }
 }
