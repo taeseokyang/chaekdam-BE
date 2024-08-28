@@ -1,6 +1,6 @@
 package eggis0.baram.domain.count.repository;
 
-import eggis0.baram.domain.count.domain.VisitCount;
+import eggis0.baram.domain.count.domain.Count;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,8 +9,8 @@ import java.time.LocalDate;
 
 @Repository
 @Transactional
-public interface VisitCountRepository extends JpaRepository<VisitCount, Integer> {
-    boolean existsByDay(LocalDate day);
+public interface CountRepository extends JpaRepository<Count, Integer> {
+    boolean existsByDayAndName(LocalDate day, String name);
 
-    VisitCount findByDay(LocalDate day);
+    Count findByDayAndName(LocalDate day, String name);
 }

@@ -12,14 +12,17 @@ import java.time.LocalDate;
 @Setter
 @Builder
 @AllArgsConstructor
-public class VisitCount {
+public class Count {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer visitCountId;
 
     @Column(nullable = false)
-    private Integer count;
+    private Long count;
+
+    @Column(nullable = false)
+    private String name;
 
     @Column(nullable = false)
     private LocalDate day;

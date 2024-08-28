@@ -78,7 +78,7 @@ public class CouncilItemService {
 
     public List<SearchResponse> getByKeyword(String keyword) {
         List<SearchResponse> councilItemsDTO = new ArrayList<>();
-        List<CouncilItem> councilItems = councilItemRepository.findTop5ByNameContaining(keyword);
+        List<CouncilItem> councilItems = councilItemRepository.findAllByNameContaining(keyword);
         for (CouncilItem councilItem : councilItems) {
             SearchResponse dto = new SearchResponse(councilItem);
             councilItemsDTO.add(dto);

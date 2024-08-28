@@ -5,10 +5,12 @@ import eggis0.baram.domain.council.dto.req.AddCouncilRequest;
 import eggis0.baram.domain.council.dto.req.UpdateCouncilRequest;
 import eggis0.baram.domain.council.dto.res.CouncilResponse;
 import eggis0.baram.domain.council.dto.res.CouncilsResponse;
+import eggis0.baram.domain.council.dto.res.SearchResponse;
 import eggis0.baram.domain.council.exception.CouncilNotFoundException;
 import eggis0.baram.domain.council.repository.CouncilRepository;
 import eggis0.baram.domain.council_item.domain.ItemType;
 import eggis0.baram.domain.council_item.repository.CouncilItemRepository;
+import eggis0.baram.domain.count.application.CountService;
 import eggis0.baram.domain.user.application.UserService;
 import eggis0.baram.domain.user.domain.Role;
 import eggis0.baram.domain.user.domain.User;
@@ -31,6 +33,8 @@ public class CouncilService {
     private final CouncilItemRepository councilItemRepository;
     private final UserRepository userRepository;
     private final UserService userService;
+    private final CountService countService;
+
 
     private static final String INIT_COUNCIL_ID = "council";
     private static final String INIT_COUNCIL_PW = "0000";
@@ -71,7 +75,9 @@ public class CouncilService {
         Council council = councilRepository.findById(id).get();
         if (!council.getIsVisible()) {
             throw new CouncilNotFoundException();
+
         }
+        countService.count(council.getName());
         return new CouncilResponse(council, council.getManager().getImgPath());
     }
 
@@ -90,6 +96,7 @@ public class CouncilService {
             dto.setCouncilId(council.getCouncilId());
             dto.setCollege(council.getCollege());
             dto.setName(council.getName());
+            dto.setHeart(council.getHeart());
             dto.setProvidedItemCount(councilItemRepository.countByCouncilAndType(council, ItemType.PROVIDED));
             dto.setRentalItemCount(councilItemRepository.countByCouncilAndType(council, ItemType.RENTAL));
             dto.setImgPath(council.getManager().getImgPath());
@@ -106,6 +113,8 @@ public class CouncilService {
             CouncilsResponse dto = new CouncilsResponse();
             dto.setCouncilId(council.getCouncilId());
             dto.setCollege(council.getCollege());
+            dto.setHeart(council.getHeart());
+            dto.setIsCouncilSelfManage(council.getIsCouncilSelfManage());
             dto.setName(council.getName());
             dto.setProvidedItemCount(councilItemRepository.countByCouncilAndType(council, ItemType.PROVIDED));
             dto.setRentalItemCount(councilItemRepository.countByCouncilAndType(council, ItemType.RENTAL));
@@ -113,6 +122,16 @@ public class CouncilService {
             councilsDTO.add(dto);
         }
         return councilsDTO;
+    }
+
+    public List<SearchResponse> getByKeyword(String keyword) {
+        List<SearchResponse> councilItemsDTO = new ArrayList<>();
+        List<Council> councils = councilRepository.findAllByNameContaining(keyword);
+        for (Council council : councils) {
+            SearchResponse dto = new SearchResponse(council);
+            councilItemsDTO.add(dto);
+        }
+        return councilItemsDTO;
     }
 
     public void delete(Integer councilId) {
@@ -131,6 +150,15 @@ public class CouncilService {
         council.setLocation(request.getLocation());
         council.setOperatingHours(request.getOperatingHours());
         council.setUsageGuidelines(request.getUsageGuidelines());
+        councilRepository.save(council);
+    }
+
+    public void countHeart(Integer councilId) {
+        if (!councilRepository.existsById(councilId)) {
+            throw new CouncilNotFoundException();
+        }
+        Council council = councilRepository.findById(councilId).get();
+        council.setHeart(council.getHeart() + 1);
         councilRepository.save(council);
     }
 

@@ -52,6 +52,7 @@ public class JwtProvider {
                 .compact();
     }
 
+
     public Authentication getAuthentication(String token) {
         return new PreAuthenticatedAuthenticationToken(this.getEmail(token), null, this.getRole(token));
     }

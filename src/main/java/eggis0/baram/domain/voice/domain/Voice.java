@@ -1,4 +1,4 @@
-package eggis0.baram.domain.gachon_herald.domain;
+package eggis0.baram.domain.voice.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -9,11 +9,11 @@ import lombok.*;
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-public class GachonHerald {
+public class Voice {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long gachonHeraldId;
+    private Long voiceId;
 
     @Column
     private String phoneNumber;
