@@ -24,6 +24,7 @@ public class CouncilResponse {
     private String imgPath;
     private List<CouncilItem> items = new ArrayList<>();
     private Boolean isCouncilSelfManage;
+    private Long heart;
 
     @Builder
     public CouncilResponse(Council council, String imgPath) {
@@ -37,6 +38,7 @@ public class CouncilResponse {
         longitude = council.getLongitude();
         this.imgPath = imgPath;
         items = council.getItems();
+        heart = council.getHeart();
         isCouncilSelfManage = council.getIsCouncilSelfManage();
     }
 
@@ -49,6 +51,7 @@ public class CouncilResponse {
         operatingHours = council.getOperatingHours();
         usageGuidelines = council.getUsageGuidelines();
         items = council.getItems();
+        heart = council.getHeart();
         isCouncilSelfManage = council.getIsCouncilSelfManage();
     }
 }

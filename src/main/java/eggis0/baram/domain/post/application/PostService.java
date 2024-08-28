@@ -1,8 +1,7 @@
 package eggis0.baram.domain.post.application;
 
 import eggis0.baram.domain.chat.repository.ChatRoomRepository;
-import eggis0.baram.domain.count.domain.VisitCount;
-import eggis0.baram.domain.count.repository.VisitCountRepository;
+import eggis0.baram.domain.count.repository.CountRepository;
 import eggis0.baram.domain.image.application.ImageService;
 import eggis0.baram.domain.post.domain.Post;
 import eggis0.baram.domain.post.dto.req.AddPostRequest;
@@ -23,7 +22,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +34,7 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final UserRepository userRepository;
-    private final VisitCountRepository visitCountRepository;
+    private final CountRepository visitCountRepository;
     private final ChatRoomRepository chatRoomRepository;
     private final ImageService imageService;
 
@@ -198,20 +196,6 @@ public class PostService {
             dto.setChatCount(chatCnt);
             postsDTO.add(dto);
         }
-
-        LocalDate today = LocalDate.now();
-
-        if (visitCountRepository.existsByDay(today)) {
-            VisitCount visitCount = visitCountRepository.findByDay(today);
-            visitCount.setCount(visitCount.getCount() + 1);
-            visitCountRepository.save(visitCount);
-            return postsDTO;
-        }
-        VisitCount visitCount = VisitCount.builder()
-                .count(1)
-                .day(today)
-                .build();
-        visitCountRepository.save(visitCount);
         return postsDTO;
     }
 

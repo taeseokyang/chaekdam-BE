@@ -21,4 +21,6 @@ public interface CouncilRepository extends JpaRepository<Council, Integer> {
     Council findByManager(User manager);
 
     boolean existsByManager(User manager);
+
+    List<Council> findAllByNameContaining(String keyword);
 }

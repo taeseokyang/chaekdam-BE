@@ -34,6 +34,9 @@ public class Council {
     private String name;
 
     @Column(nullable = false)
+    private Long heart = 0L;
+
+    @Column(nullable = false)
     private String location;
 
     @Column(nullable = false)

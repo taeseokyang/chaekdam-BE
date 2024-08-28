@@ -16,5 +16,5 @@ public interface CouncilItemRepository extends JpaRepository<CouncilItem, Intege
 
     Integer countByCouncilAndType(Council council, ItemType type);
 
-    List<CouncilItem> findTop5ByNameContaining(String keyword);
+    List<CouncilItem> findAllByNameContaining(String keyword);
 }
