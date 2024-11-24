@@ -8,6 +8,7 @@ import chaekdam.domain.chat.application.ChatService;
 import chaekdam.domain.chat.domain.ChatRoom;
 import chaekdam.domain.chat.repository.ChatRoomRepository;
 import chaekdam.domain.participant.domain.Participant;
+import chaekdam.domain.participant.exception.AlreadyParticipatingException;
 import chaekdam.domain.participant.repository.ParticipantRepository;
 import chaekdam.domain.user.domain.User;
 import chaekdam.domain.user.repository.UserRepository;
@@ -33,6 +34,9 @@ public class ParticipantService {
         Book book = bookService.getBook(isbn);
         Optional<ChatRoom> optionalChatRoom = chatRoomRepository.findByBook(book);
         ChatRoom chatRoom = optionalChatRoom.orElseGet(() -> chatService.save(isbn));
+
+        Optional<Participant> alreadyExistParticipant = participantRepository.findByChatRoomAndUser(chatRoom, user);
+        if (alreadyExistParticipant.isPresent())throw new AlreadyParticipatingException();
         chatService.increasePeopleCount(chatRoom);
         Participant participant = Participant.builder()
                 .user(user)
