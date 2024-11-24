@@ -2,7 +2,6 @@ package chaekdam.domain.chat.repository;
 
 import chaekdam.domain.book.domain.Book;
 import chaekdam.domain.chat.domain.ChatRoom;
-import chaekdam.domain.user.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;

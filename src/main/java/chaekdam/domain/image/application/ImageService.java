@@ -16,13 +16,14 @@ import java.util.UUID;
 public class ImageService {
 
     @Value("${image.path}")
-    private String IMAGE_PATH;
+    private String IMAGE_PATH; // 이미지 디렉토리 주소
+
+    // 기본 이미지 이름
     public String DEFAULT_IMAGE = "default.png";
 
+    // 이미지 저장
     public String save(MultipartFile pic) {
-        if (pic == null) {
-            return DEFAULT_IMAGE;
-        }
+        if (pic == null) return DEFAULT_IMAGE;
         UUID uuid = UUID.randomUUID();
         String imageFileName = uuid + pic.getOriginalFilename();
         Path imagePath = Paths.get(IMAGE_PATH + imageFileName);

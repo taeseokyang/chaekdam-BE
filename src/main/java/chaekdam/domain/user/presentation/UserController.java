@@ -19,26 +19,30 @@ import static org.springframework.http.HttpStatus.OK;
 public class UserController {
     private final UserService userService;
 
+    // 로그인
     @PostMapping(value = "/login")
     public ResponseDto<UserResponse> signIn(@RequestBody UserRequest request) {
         UserResponse response = userService.login(request);
         return ResponseDto.of(OK.value(), SUCCESS_LOGIN.getMessage(), response);
     }
 
+    // 회원가입
     @PostMapping(value = "/register")
     public ResponseDto<UserResponse> signUp(@RequestPart(required = false) MultipartFile pic, @RequestPart UserRequest request) {
         UserResponse response = userService.register(request, pic);
         return ResponseDto.of(OK.value(), SUCCESS_REGISTER.getMessage(), response);
     }
 
+    // 계정 존재 확인
     @GetMapping(value = "/check/{id}")
     public ResponseDto<CheckResponse> check(@PathVariable String id) {
         CheckResponse response = userService.check(id);
         return ResponseDto.of(OK.value(), SUCCESS_READ.getMessage(), response);
     }
 
+    // 계정 조회
     @GetMapping("/account")
-    public ResponseDto<UserResponse> get(@RequestParam Long id) throws Exception {
+    public ResponseDto<UserResponse> get(@RequestParam Long id) {
         UserResponse response = userService.get(id);
         return ResponseDto.of(OK.value(), SUCCESS_READ.getMessage(), response);
     }

@@ -31,6 +31,7 @@ public class JwtProvider {
 
     private Key secretKey;
 
+    // 만료 기간
     private final long exp = 48000L * 60 * 60;
 
     private static final String ROLE_KEY = "role";
@@ -53,24 +54,29 @@ public class JwtProvider {
     }
 
 
+    // userId 가져오기
     public Authentication getAuthentication(String token) {
         return new PreAuthenticatedAuthenticationToken(this.getEmail(token), null, this.getRole(token));
     }
 
+    // 이메일 가져오기
     public String getEmail(String token) {
         return Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token).getBody().getSubject();
     }
 
+    // 역할 가져오기
     public Collection<? extends GrantedAuthority> getRole(String token) {
         return convertToGrantedAuthorities(Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token).getBody().get(ROLE_KEY).toString());
     }
 
+    // 다중 역할 가공
     private Collection<? extends GrantedAuthority> convertToGrantedAuthorities(String role) {
         List<GrantedAuthority> authoritie = new ArrayList<>();
         authoritie.add(new SimpleGrantedAuthority(role));
         return authoritie;
     }
 
+    // 토큰 확인
     public void validateToken(String token) {
         try {
             parseClaims(token);
@@ -81,6 +87,7 @@ public class JwtProvider {
         }
     }
 
+    // 토큰 분해
     public Claims parseClaims(String accessToken) {
         try {
             JwtParser parser = Jwts.parser().setSigningKey(secretKey);

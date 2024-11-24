@@ -26,7 +26,6 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Component
@@ -45,16 +44,17 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
     private Map<String, WebSocketSession> idToSessionMap = new HashMap<>();
     private Long session_Idx = 0L;
 
+    // 메세지가 왔을 때
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         String payload = message.getPayload();
         log.info("payload {}", payload);
-
         ChatDTO chatMessage = mapper.readValue(payload, ChatDTO.class);
         log.info("{} 연결됨", session.getId());
         handleAction(session, chatMessage);
     }
 
+    // 연결 종류 후
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
         String removedSessionIdx = sessionToIdMap.remove(session);
@@ -67,24 +67,29 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
         ChatRoom chatRoom = chatRoomRepository.findByRoomId(message.getRoomId());
         User user = userRepository.findByUserId(message.getUserId()).orElseThrow(UserNotFountException::new);
         Participant participant = participantRepository.findByChatRoomAndUser(chatRoom, user).orElseThrow(ParticipantNotFountException::new);
-        if (message.getType().equals(MessageType.ENTER)) {
+
+        if (message.getType().equals(MessageType.ENTER)) { // 채팅방 입장 시
+            // 세션 객체와 세션 id 양방향 Map 제작
             session_Idx += 1;
             sessionToIdMap.put(session, session_Idx.toString());
             idToSessionMap.put(session_Idx.toString(), session);
-
+            // 레디스에 세션 id 기록
             redisTemplate.opsForValue().set(participant.getUser().getUserId(), session_Idx.toString());
-        } else if (message.getType().equals(MessageType.TALK)) {
+        } else if (message.getType().equals(MessageType.TALK)) { // 메세지 전송 시
+            // 메세지 기록
             messageService.save(message.getMessage(), message.getRoomId(), message.getUserId());
+            // 메세지 전송
             message.setMessage(message.getMessage());
             sendMessage(message, chatRoom);
         }
     }
 
+    // 메세지 전송
     public <T> void sendMessage(T message, ChatRoom chatRoom) {
         try {
             List<Participant> participantList = participantRepository.findAllByChatRoom(chatRoom);
             for(Participant participant : participantList){
-                String session_Idx = redisTemplate.opsForValue().get(participant.getUser().getUserId());
+                String session_Idx = redisTemplate.opsForValue().get(participant.getUser().getUserId()); // 세션 id 가져오기
                 chatService.sendMessage(idToSessionMap.get(session_Idx), message);
             }
         } catch (Exception e) {

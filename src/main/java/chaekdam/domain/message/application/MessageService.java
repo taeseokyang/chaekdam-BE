@@ -1,6 +1,5 @@
 package chaekdam.domain.message.application;
 
-import chaekdam.domain.message.exception.PermissionDeniedException;
 import chaekdam.domain.message.repository.MessageRepository;
 import chaekdam.domain.user.domain.User;
 import chaekdam.domain.user.repository.UserRepository;
@@ -24,6 +23,7 @@ public class MessageService {
     private final ChatRoomRepository chatRoomRepository;
     private final UserRepository userRepository;
 
+    // 메세지 저장
     public Message save(String message, String roomId, String userName) {
         User user = userRepository.findByUserId(userName).get();
         ChatRoom chatRoom = chatRoomRepository.findByRoomId(roomId);
@@ -38,21 +38,13 @@ public class MessageService {
         return messageRepository.save(saveMessage);
     }
 
+    // 메세지 조회
     public List<MessageResponse> getAllMessageByRoomId(String roomId, Long lastMessageId) {
-
-        if (!chatRoomRepository.existsByRoomId(roomId)) {
-            throw new ChatRoomNotFoundException();
-        }
-
+        if (!chatRoomRepository.existsByRoomId(roomId)) throw new ChatRoomNotFoundException();
         ChatRoom chatRoom = chatRoomRepository.findByRoomId(roomId);
         List<Message> messagePage = messageRepository.findTop20ByChatRoomAndChatIdLessThanOrderByChatIdDesc(chatRoom, lastMessageId);
-
         List<MessageResponse> messagesDTO = new ArrayList<>();
-        for (Message message : messagePage) {
-            MessageResponse dto = new MessageResponse(message);
-            messagesDTO.add(dto);
-        }
-
+        for (Message message : messagePage)  messagesDTO.add(new MessageResponse(message));
         return messagesDTO;
     }
 }

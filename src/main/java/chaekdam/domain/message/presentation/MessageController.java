@@ -5,7 +5,6 @@ import chaekdam.global.config.dto.ResponseDto;
 import chaekdam.domain.message.dto.res.MessageResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,6 +20,7 @@ public class MessageController {
 
     private final MessageService messageService;
 
+    // 메세지 조회
     @GetMapping("/{roomId}")
     public ResponseDto<List<MessageResponse>> getAllByRoom(@PathVariable String roomId, @RequestParam Long lastMessageId) {
         List<MessageResponse> responses = messageService.getAllMessageByRoomId(roomId, lastMessageId);

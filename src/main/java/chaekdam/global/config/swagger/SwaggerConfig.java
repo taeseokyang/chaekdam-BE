@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-
+// 스웨거 설정
 @OpenAPIDefinition(
         info = @Info(title = "책담 API 명세서",
                 description = "책담 API 명세서",

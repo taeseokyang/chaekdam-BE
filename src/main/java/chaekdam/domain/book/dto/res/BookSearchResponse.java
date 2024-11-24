@@ -7,6 +7,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
+@Builder
 public class BookSearchResponse {
     private String isbn;
     private String title;
@@ -14,7 +15,6 @@ public class BookSearchResponse {
     private String author;
     private String publisher;
 
-    @Builder
     public BookSearchResponse(String isbn, String title, String bookCoverImgName, String author, String publisher) {
         this.title = title;
         this.isbn = isbn;

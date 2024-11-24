@@ -4,7 +4,6 @@ import chaekdam.domain.book.domain.Book;
 import chaekdam.domain.book.exception.BookNotFoundException;
 import chaekdam.domain.book.repository.BookRepository;
 import chaekdam.domain.chat.domain.ChatRoom;
-import chaekdam.domain.chat.dto.res.ChatRoomResponse;
 import chaekdam.domain.chat.dto.res.ChatRoomsResponse;
 import chaekdam.domain.chat.exception.FailSendMessageException;
 import chaekdam.domain.chat.repository.ChatRoomRepository;
@@ -41,13 +40,12 @@ public class ChatService {
     private final ObjectMapper mapper;
     private static final String NO_MESSAGE = "no message";
 
+    // 채팅방 생성
     public ChatRoom save(String isbn) {
         String roomId = UUID.randomUUID().toString();
         Book book = bookRepository.findByIsbn(isbn).orElseThrow(BookNotFoundException::new);
         Optional<ChatRoom> alreadyExistChatRoom = chatRoomRepository.findByBook(book);
-        if (alreadyExistChatRoom.isPresent()) {
-            return alreadyExistChatRoom.get();
-        }
+        if (alreadyExistChatRoom.isPresent()) return alreadyExistChatRoom.get();
         ChatRoom chatRoom = ChatRoom.builder()
                 .roomId(roomId)
                 .book(book)
@@ -56,12 +54,14 @@ public class ChatService {
                 .build();
         return chatRoomRepository.save(chatRoom);
     }
+
+    // 참여자 수 증가
     public void increasePeopleCount(ChatRoom chatRoom) {
         chatRoom.setPeopleCount(chatRoom.getPeopleCount()+1);
         chatRoomRepository.save(chatRoom);
     }
 
-
+    // 유저의 채팅방 모두 조회
     public List<ChatRoomsResponse> getAllByUser(String userName) {
         User user = userRepository.findByUserId(userName).orElseThrow(UserNotFountException::new);
         List<Participant> participantList = participantRepository.findAllByUser(user);
@@ -79,14 +79,12 @@ public class ChatService {
         return chatRoomDTOs;
     }
 
+    // 메세지 전송
     public <T> void sendMessage(WebSocketSession session, T message) {
         try {
-            if (session != null) {
-                session.sendMessage(new TextMessage(mapper.writeValueAsString(message)));
-            }
+            if (session != null) session.sendMessage(new TextMessage(mapper.writeValueAsString(message)));
         } catch (IOException e) {
             throw new FailSendMessageException();
         }
     }
-
 }

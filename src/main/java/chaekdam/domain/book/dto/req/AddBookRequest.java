@@ -12,12 +12,5 @@ public class AddBookRequest {
     private String title;
     private String author;
     private String publisher;
-    private Long pageCount;
-    private Long categoryId;
-    private String description;
     private String coverImgName;
-    private Integer weight;
-    private Integer sizeDepth;
-    private Integer sizeHeight;
-    private Integer sizeWidth;
 }
