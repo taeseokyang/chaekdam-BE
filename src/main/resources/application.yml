@@ -6,7 +6,7 @@ spring:
       ddl-auto: update
     open-in-view: false
   datasource:
-    url: jdbc:mysql://127.0.0.1:3306/chaekdam
+    url: jdbc:mysql://mysql-container:3306/chaekdam
     username: root
     password: password
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -14,7 +14,7 @@ spring:
     redis:
       host: localhost
       port: 6379
-      password: 20010203
+      password: password
   servlet:
     multipart:
       max-file-size: 10MB
@@ -24,6 +24,6 @@ jwt:
   secret:
     key: youcantrevealtheaccesssecretkey123459876
 image:
-  path: /Users/yangts/chaekdam/images/
+  path: /app/assets/images/
 aladin:
   ttb-key: ttbMrhappyjs1948005
