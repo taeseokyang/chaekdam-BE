@@ -1,6 +1,7 @@
 package chaekdam.domain.user.presentation;
 
 import chaekdam.domain.user.application.UserService;
+import chaekdam.domain.user.dto.res.CheckResponse;
 import chaekdam.global.config.dto.ResponseDto;
 import chaekdam.domain.user.dto.req.UpdateUserRequest;
 import chaekdam.domain.user.dto.req.UserRequest;
@@ -25,9 +26,15 @@ public class UserController {
     }
 
     @PostMapping(value = "/register")
-    public ResponseDto signUp(@RequestPart(required = false) MultipartFile pic, @RequestPart UserRequest request) {
-        userService.register(request, pic);
-        return ResponseDto.of(OK.value(), SUCCESS_REGISTER.getMessage());
+    public ResponseDto<UserResponse> signUp(@RequestPart(required = false) MultipartFile pic, @RequestPart UserRequest request) {
+        UserResponse response = userService.register(request, pic);
+        return ResponseDto.of(OK.value(), SUCCESS_REGISTER.getMessage(), response);
+    }
+
+    @GetMapping(value = "/check/{id}")
+    public ResponseDto<CheckResponse> check(@PathVariable String id) {
+        CheckResponse response = userService.check(id);
+        return ResponseDto.of(OK.value(), SUCCESS_READ.getMessage(), response);
     }
 
     @GetMapping("/account")

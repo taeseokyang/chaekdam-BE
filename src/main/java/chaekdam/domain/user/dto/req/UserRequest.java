@@ -7,13 +7,9 @@ import lombok.Setter;
 @Getter
 @Setter
 public class UserRequest {
-    private Long id;
-
-    private String userid;
+    private String id;
 
     private String nickname;
 
     private String password;
-
-    private Role role;
 }

@@ -51,10 +51,16 @@ public class ChatService {
         ChatRoom chatRoom = ChatRoom.builder()
                 .roomId(roomId)
                 .book(book)
+                .peopleCount(0L)
                 .createdAt(LocalDateTime.now())
                 .build();
         return chatRoomRepository.save(chatRoom);
     }
+    public void increasePeopleCount(ChatRoom chatRoom) {
+        chatRoom.setPeopleCount(chatRoom.getPeopleCount()+1);
+        chatRoomRepository.save(chatRoom);
+    }
+
 
     public List<ChatRoomsResponse> getAllByUser(String userName) {
         User user = userRepository.findByUserId(userName).orElseThrow(UserNotFountException::new);

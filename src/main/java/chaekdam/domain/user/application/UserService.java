@@ -1,5 +1,6 @@
 package chaekdam.domain.user.application;
 
+import chaekdam.domain.user.dto.res.CheckResponse;
 import chaekdam.domain.user.exception.IncorrectPasswordException;
 import chaekdam.domain.user.exception.UserNotFountException;
 import chaekdam.domain.user.repository.UserRepository;
@@ -87,37 +88,51 @@ public class UserService {
 
 
     public UserResponse login(UserRequest request) {
-        if (!userRepository.existsUserByUserId(request.getUserid())) {
+        if (!userRepository.existsUserByUserId(request.getId())) {
             throw new UserNotFountException();
         }
-        User user = userRepository.findByUserId(request.getUserid()).get();
+        User user = userRepository.findByUserId(request.getId()).get();
 
         if (!user.getPassWord().equals(request.getPassword())) {
             throw new IncorrectPasswordException();
         }
         UserResponse signResponse = UserResponse.builder()
-                .id(user.getId())
                 .userId(user.getUserId())
                 .nickname(user.getNickName())
-                .roles(user.getRole())
+                .imgPath(user.getImgPath())
                 .token(jwtProvider.createToken(user.getUserId(), user.getRole()))
                 .build();
         return signResponse;
     }
 
-    public void register(UserRequest request, MultipartFile pic) {
-        if (userRepository.existsUserByUserId(request.getUserid())) {
+    public UserResponse register(UserRequest request, MultipartFile pic) {
+        if (userRepository.existsUserByUserId(request.getId())) {
             throw new DuplicateUserIdException();
         }
         String imageFileName = imageService.save(pic);
         User user = User.builder()
-                .userId(request.getUserid())
+                .userId(request.getId())
                 .passWord(request.getPassword())
                 .nickName(request.getNickname())
                 .imgPath(imageFileName)
                 .role(Role.USER)
                 .build();
-        userRepository.save(user);
+        user = userRepository.save(user);
+
+        UserResponse signResponse = UserResponse.builder()
+                .userId(user.getUserId())
+                .nickname(user.getNickName())
+                .imgPath(user.getImgPath())
+                .token(jwtProvider.createToken(user.getUserId(), user.getRole()))
+                .build();
+        return signResponse;
+    }
+
+    public CheckResponse check(String id) {
+        if (userRepository.existsUserByUserId(id)){
+            return new CheckResponse(1);
+        }
+        return new CheckResponse(2);
     }
 
     public UserResponse get(Long id) {

@@ -62,7 +62,7 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
 
     public void handleAction(WebSocketSession session, ChatDTO message) {
         ChatRoom chatRoom = chatRoomRepository.findByRoomId(message.getRoomId());
-        User user = userRepository.findByUserId(message.getSender()).orElseThrow(UserNotFountException::new);
+        User user = userRepository.findByUserId(message.getUserId()).orElseThrow(UserNotFountException::new);
         Participant participant = participantRepository.findByChatRoomAndUser(chatRoom, user).orElseThrow(ParticipantNotFountException::new);
         if (message.getType().equals(MessageType.ENTER)) {
             session_Idx += 1;
@@ -71,7 +71,7 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
             participant.setSessionId(session_Idx);
             participantRepository.save(participant);
         } else if (message.getType().equals(MessageType.TALK)) {
-            messageService.save(message.getMessage(), message.getRoomId(), message.getSender());
+            messageService.save(message.getMessage(), message.getRoomId(), message.getUserId());
             message.setMessage(message.getMessage());
             sendMessage(message, chatRoom);
         }

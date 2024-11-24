@@ -22,6 +22,7 @@ import chaekdam.domain.image.application.ImageService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -35,7 +36,7 @@ public class BookService {
     private final ImageService imageService;
     public static final int PAGE_SIZE = 10;
 
-    public BookResponse save(AddBookRequest request) {
+    public Book save(AddBookRequest request) {
         Book book = Book.builder()
                 .isbn(request.getIsbn())
                 .title(request.getTitle())
@@ -43,8 +44,7 @@ public class BookService {
                 .author(request.getAuthor())
                 .publisher(request.getPublisher())
                 .build();
-        book = bookRepository.save(book);
-        return new BookResponse(book);
+        return bookRepository.save(book);
     }
 
     private String makeSearchUrl(String keyword){
@@ -79,14 +79,12 @@ public class BookService {
         return new BookSearchResponse(isbn, title, bookCoverImgName, author, publisher);
     }
 
-    public void save(String isbn) {
-        if (bookRepository.existsByIsbn(isbn)){
-            return;
-        }
-        lookUpFromAladin(isbn);
+    public Book getBook(String isbn) {
+        Optional<Book> optionalBook = bookRepository.findByIsbn(isbn);
+        return optionalBook.orElseGet(() -> lookUpFromAladin(isbn));
     }
 
-    public void lookUpFromAladin(String isbn) {
+    public Book lookUpFromAladin(String isbn) {
         RestTemplate restTemplate = new RestTemplate();
         HttpEntity<?> entity = new HttpEntity<>(new HttpHeaders());
         ResponseEntity<Map> resultMap = restTemplate.exchange(makeLookUpUrl(isbn), HttpMethod.GET, entity, Map.class);
@@ -110,7 +108,7 @@ public class BookService {
                 .publisher(publisher)
                 .coverImgName(bookCoverImgName)
                 .build();
-        this.save(request);
+        return this.save(request);
     }
 
     public static String replaceCoverUrl(String original) {

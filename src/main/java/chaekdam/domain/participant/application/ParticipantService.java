@@ -1,5 +1,6 @@
 package chaekdam.domain.participant.application;
 
+import chaekdam.domain.book.application.BookService;
 import chaekdam.domain.book.domain.Book;
 import chaekdam.domain.book.exception.BookNotFoundException;
 import chaekdam.domain.book.repository.BookRepository;
@@ -23,14 +24,16 @@ public class ParticipantService {
     private final UserRepository userRepository;
     private final ChatRoomRepository chatRoomRepository;
     private final ChatService chatService;
+    private final BookService bookService;
     private final BookRepository bookRepository;
     private final ParticipantRepository participantRepository;
 
     public void participate(String isbn, String userId) {
         User user = userRepository.findByUserId(userId).orElseThrow(BookNotFoundException::new);
-        Book book = bookRepository.findByIsbn(isbn).orElseThrow(BookNotFoundException::new);
+        Book book = bookService.getBook(isbn);
         Optional<ChatRoom> optionalChatRoom = chatRoomRepository.findByBook(book);
         ChatRoom chatRoom = optionalChatRoom.orElseGet(() -> chatService.save(isbn));
+        chatService.increasePeopleCount(chatRoom);
         Participant participant = Participant.builder()
                 .user(user)
                 .chatRoom(chatRoom)
