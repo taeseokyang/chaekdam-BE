@@ -19,9 +19,15 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping(value = "/login")
-    public ResponseDto<UserResponse> signin(@RequestBody UserRequest request) {
+    public ResponseDto<UserResponse> signIn(@RequestBody UserRequest request) {
         UserResponse response = userService.login(request);
         return ResponseDto.of(OK.value(), SUCCESS_LOGIN.getMessage(), response);
+    }
+
+    @PostMapping(value = "/register")
+    public ResponseDto signUp(@RequestPart(required = false) MultipartFile pic, @RequestPart UserRequest request) {
+        userService.register(request, pic);
+        return ResponseDto.of(OK.value(), SUCCESS_REGISTER.getMessage());
     }
 
     @GetMapping("/account")

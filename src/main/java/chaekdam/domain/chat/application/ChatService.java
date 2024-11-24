@@ -15,7 +15,6 @@ import chaekdam.domain.user.domain.User;
 import chaekdam.domain.user.exception.UserNotFountException;
 import chaekdam.domain.user.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import chaekdam.domain.chat.dto.req.AddChatRoomRequest;
 import chaekdam.domain.message.domain.Message;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -42,19 +41,19 @@ public class ChatService {
     private final ObjectMapper mapper;
     private static final String NO_MESSAGE = "no message";
 
-    public ChatRoomResponse save(AddChatRoomRequest request) {
+    public ChatRoom save(String isbn) {
         String roomId = UUID.randomUUID().toString();
-        Book book = bookRepository.findByIsbn(request.getIsbn()).orElseThrow(BookNotFoundException::new);
+        Book book = bookRepository.findByIsbn(isbn).orElseThrow(BookNotFoundException::new);
         Optional<ChatRoom> alreadyExistChatRoom = chatRoomRepository.findByBook(book);
         if (alreadyExistChatRoom.isPresent()) {
-            return new ChatRoomResponse(alreadyExistChatRoom.get());
+            return alreadyExistChatRoom.get();
         }
         ChatRoom chatRoom = ChatRoom.builder()
                 .roomId(roomId)
                 .book(book)
                 .createdAt(LocalDateTime.now())
                 .build();
-        return new ChatRoomResponse(chatRoomRepository.save(chatRoom));
+        return chatRoomRepository.save(chatRoom);
     }
 
     public List<ChatRoomsResponse> getAllByUser(String userName) {

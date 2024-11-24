@@ -109,7 +109,7 @@ public class UserService {
         if (userRepository.existsUserByUserId(request.getUserid())) {
             throw new DuplicateUserIdException();
         }
-        String imageFileName = imageService.save(pic, false);
+        String imageFileName = imageService.save(pic);
         User user = User.builder()
                 .userId(request.getUserid())
                 .passWord(request.getPassword())

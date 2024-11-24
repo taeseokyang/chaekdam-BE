@@ -1,7 +1,6 @@
 package chaekdam.domain.chat.presentation;
 
 import chaekdam.domain.chat.application.ChatService;
-import chaekdam.domain.chat.dto.req.AddChatRoomRequest;
 import chaekdam.domain.chat.dto.res.ChatRoomResponse;
 import chaekdam.domain.chat.dto.res.ChatRoomsResponse;
 import chaekdam.global.config.dto.ResponseDto;
@@ -24,11 +23,11 @@ public class ChatController {
 
     private final ChatService chatService;
 
-    @PostMapping
-    public ResponseDto<ChatRoomResponse> save(@RequestBody AddChatRoomRequest request) {
-        ChatRoomResponse response = chatService.save(request);
-        return ResponseDto.of(OK.value(), SUCCESS_CREATE.getMessage(), response);
-    }
+//    @PostMapping("/{isbn}")
+//    public ResponseDto<ChatRoomResponse> save(@PathVariable String isbn) {
+//        ChatRoomResponse response = chatService.save(isbn);
+//        return ResponseDto.of(OK.value(), SUCCESS_CREATE.getMessage(), response);
+//    }
 
     @GetMapping("/user")
     public ResponseDto<List<ChatRoomsResponse>> getAllByUser(Authentication authentication) {

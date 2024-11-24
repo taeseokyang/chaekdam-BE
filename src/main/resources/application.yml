@@ -25,7 +25,6 @@ jwt:
     key: youcantrevealtheaccesssecretkey123459876
 image:
   path: /home/ubuntu/images/
-  secret-key: BARAMIMPORTANT
 kakao:
   rest-api-key: ddef038fa084012b787cdc2e0ac14a40
 aladin:
