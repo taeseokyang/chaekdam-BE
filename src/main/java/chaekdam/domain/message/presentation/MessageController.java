@@ -6,10 +6,7 @@ import chaekdam.domain.message.dto.res.MessageResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -25,8 +22,8 @@ public class MessageController {
     private final MessageService messageService;
 
     @GetMapping("/{roomId}")
-    public ResponseDto<List<MessageResponse>> getAllByRoom(@PathVariable String roomId, Authentication authentication) {
-        List<MessageResponse> responses = messageService.getAllMessageByRoomId(roomId, authentication.getName());
+    public ResponseDto<List<MessageResponse>> getAllByRoom(@PathVariable String roomId, @RequestParam Long lastMessageId) {
+        List<MessageResponse> responses = messageService.getAllMessageByRoomId(roomId, lastMessageId);
         return ResponseDto.of(OK.value(), SUCCESS_READ.getMessage(), responses);
     }
 }

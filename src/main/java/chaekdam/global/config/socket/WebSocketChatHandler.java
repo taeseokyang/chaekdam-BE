@@ -16,6 +16,7 @@ import chaekdam.domain.message.application.MessageService;
 import chaekdam.domain.message.domain.MessageType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -25,6 +26,7 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Component
@@ -38,8 +40,9 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
     private final ParticipantRepository participantRepository;
     private final UserRepository userRepository;
 
-    private Map<WebSocketSession, Long> sessionToIdMap = new HashMap<>();
-    private Map<Long, WebSocketSession> idToSessionMap = new HashMap<>();
+    private final RedisTemplate<String, String> redisTemplate;
+    private Map<WebSocketSession, String> sessionToIdMap = new HashMap<>();
+    private Map<String, WebSocketSession> idToSessionMap = new HashMap<>();
     private Long session_Idx = 0L;
 
     @Override
@@ -54,7 +57,7 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
-        Long removedSessionIdx = sessionToIdMap.remove(session);
+        String removedSessionIdx = sessionToIdMap.remove(session);
         idToSessionMap.remove(removedSessionIdx);
         log.info("{} 연결 끊김", session.getId());
         log.info("세션 메모리 크기 {}", sessionToIdMap.size());
@@ -66,10 +69,10 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
         Participant participant = participantRepository.findByChatRoomAndUser(chatRoom, user).orElseThrow(ParticipantNotFountException::new);
         if (message.getType().equals(MessageType.ENTER)) {
             session_Idx += 1;
-            sessionToIdMap.put(session, session_Idx);
-            idToSessionMap.put(session_Idx, session);
-            participant.setSessionId(session_Idx);
-            participantRepository.save(participant);
+            sessionToIdMap.put(session, session_Idx.toString());
+            idToSessionMap.put(session_Idx.toString(), session);
+
+            redisTemplate.opsForValue().set(participant.getUser().getUserId(), session_Idx.toString());
         } else if (message.getType().equals(MessageType.TALK)) {
             messageService.save(message.getMessage(), message.getRoomId(), message.getUserId());
             message.setMessage(message.getMessage());
@@ -81,7 +84,8 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
         try {
             List<Participant> participantList = participantRepository.findAllByChatRoom(chatRoom);
             for(Participant participant : participantList){
-                chatService.sendMessage(idToSessionMap.get(participant.getSessionId()), message);
+                String session_Idx = redisTemplate.opsForValue().get(participant.getUser().getUserId());
+                chatService.sendMessage(idToSessionMap.get(session_Idx), message);
             }
         } catch (Exception e) {
             throw new FailSendMessageException();

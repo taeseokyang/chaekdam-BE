@@ -28,7 +28,4 @@ public class Participant {
     @ManyToOne(fetch = FetchType.EAGER)
     @JsonIgnore
     private User user;
-
-    @Column
-    private Long sessionId;
 }

@@ -38,18 +38,21 @@ public class MessageService {
         return messageRepository.save(saveMessage);
     }
 
-    public List<MessageResponse> getAllMessageByRoomId(String roomId, String userName) {
+    public List<MessageResponse> getAllMessageByRoomId(String roomId, Long lastMessageId) {
 
         if (!chatRoomRepository.existsByRoomId(roomId)) {
             throw new ChatRoomNotFoundException();
         }
+
         ChatRoom chatRoom = chatRoomRepository.findByRoomId(roomId);
+        List<Message> messagePage = messageRepository.findTop20ByChatRoomAndChatIdLessThanOrderByChatIdDesc(chatRoom, lastMessageId);
+
         List<MessageResponse> messagesDTO = new ArrayList<>();
-        List<Message> messages = messageRepository.findAllByChatRoomOrderBySentAtAsc(chatRoom);
-        for (Message message : messages) {
+        for (Message message : messagePage) {
             MessageResponse dto = new MessageResponse(message);
             messagesDTO.add(dto);
         }
+
         return messagesDTO;
     }
 }
